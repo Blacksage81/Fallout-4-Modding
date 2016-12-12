@@ -1,0 +1,54 @@
+Scriptname TerminalTemplate extends Terminal
+
+;-------Definition Block--------
+;Numerical Values
+;Actors
+;Actor Values
+;Cell 
+;Global Properties
+;Faction
+;Object
+;Package
+;Quest
+;ReferenceAlias Properties
+;Scene
+;Special
+
+;Function Definitions
+
+
+
+
+
+;End Function Block--------
+;End Definition Block--------
+
+Event OnMenuItemRun(int ID, ObjectReference akTerminalRef)
+
+
+If ID == 1 ; Does a thing when the Player chooses an option.
+        ;The thing that is done.
+    EndIf
+If ID == 2 ; Does a thing when the Player chooses an option.
+        ;The thing that is done.
+    EndIf
+If ID == 3 ; Does a thing when the Player chooses an option.
+        ;The thing that is done.
+    EndIf
+If ID == 4 ; Does a thing when the Player chooses an option.
+        ;The thing that is done.
+    EndIf
+If ID == 5 ; Does a thing when the Player chooses an option.
+        ;The thing that is done.
+    EndIf    
+If ID == 6 ; Does a thing when the Player chooses an option.
+        ;The thing that is done.
+    EndIf
+If ID == 7 ; Does a thing when the Player chooses an option.
+        ;The thing that is done.
+    EndIf
+If ID == 8 ; Does a thing when the Player chooses an option.
+        ;The thing that is done.
+    EndIf
+
+EndEvent
