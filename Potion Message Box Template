@@ -1,0 +1,75 @@
+Scriptname TempMessage extends activemagiceffect
+
+;-------Definition Block--------
+;Potion Properties
+Potion Property Temp_item Auto Const
+;Message Properties
+Message Property Temp_Menu Auto
+;Global Properties
+GlobalVariable Property pTemp_Global Auto
+;-------End Definition Block--------
+
+;---Function Block--------
+Function TempFunc()
+		;Local Function Props
+			actor Player = Game.GetPlayer()
+			
+	if (pTempGlobal.GetValue() == 1) 
+			;Thing(s) that you want done if button 1 is pressed			
+				
+	ElseIf (pTempGlobal.GetValue() == 2)
+			;Thing
+	
+	ElseIf (pTempGlobal.GetValue() == 3) 
+			;Thing
+	
+	ElseIf (pTempGlobal.GetValue() == 4)
+			;Thing
+
+	ElseIf (pTempGlobal.GetValue() == 5) 
+			;Thing
+
+	ElseIf (pTempGlobal.GetValue() == 6)
+			;Thing			
+	EndIf
+		
+EndFunction
+
+;----------End Function Block--------
+
+Event OnEffectStart(Actor akTarget, Actor akCaster)
+if akTarget == Game.GetPlayer()
+ int ButtonPressed = Temp_Menu.Show()
+    if ButtonPressed == 0
+		;It is good practice to have a cancel button for re-useable menus.
+		pTempGlobal.SetValue(0)
+			;we set the Global back to Zero to prevent any future problems on subsequent uses
+    elseif ButtonPressed == 1 
+		pTempGlobal.SetValue(1)
+			TempFunc()
+			pTempGlobal.SetValue(0)
+    elseif ButtonPressed == 2
+		pTempGlobal.SetValue(2)
+			TempFunc()
+			pTempGlobal.SetValue(0)
+    elseif ButtonPressed == 3 
+		pTempGlobal.SetValue(3)
+			TempFunc()
+			pTempGlobal.SetValue(0)
+    elseif ButtonPressed == 4
+		pTempGlobal.SetValue(4)
+			TempFunc()
+			pTempGlobal.SetValue(0)
+	elseif ButtonPressed == 5
+		pTempGlobal.SetValue(5)
+			TempFunc()
+			pTempGlobal.SetValue(0)
+	elseif ButtonPressed == 6
+		pTempGlobal.SetValue(6)
+			TempFunc()
+			pTempGlobal.SetValue(0)
+	EndIf
+			;silently adds another item to the players inventory
+			akTarget.additem(Temp_item, absilent = true)
+endif
+endEvent
