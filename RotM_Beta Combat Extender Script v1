@@ -1,0 +1,29 @@
+Scriptname RotM_CombatExtender extends Quest 
+{This Script contains functions that will allow the actor to execute special Melee,Ranged, and Kunai Heal abilities.
+This is achieved by using the script attached to the actors Master Magic effect will have this script as one of it Properties.
+The Magic effect script will then call functions within this script to evaluate the coresponding Package.}
+
+;Actor Properties
+Actor Property myActor Auto Const
+
+;Package Properties
+Package Property myPackM Auto Const
+Package Property myPackR Auto Const
+Package Property myPackH Auto Const
+
+
+;Function Definition Block
+
+Function myPackR()
+	myActor.EvaluatePackage(MyPackR)
+EndFunction
+
+Function myPackM()
+	myActor.EvaluatePackage(MyPackM)
+EndFunction
+
+Function myPackH()
+	myActor.EvaluatePackage(MyPackH)
+EndFunction
+
+;End Function Definition block
