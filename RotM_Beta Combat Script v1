@@ -1,0 +1,217 @@
+Scriptname RotM_saLSMasterScript extends activemagiceffect
+
+{Ment to allow companions to cast TIMED spells.}
+;Properties
+
+;Actor Values
+ActorValue Property Health Auto
+
+;Script Properties
+RotM_CombatExtender Property myActorQuest Auto
+
+;Numerical Properties
+Float Property LowHealth Auto Mandatory
+Float Property HighHealth Auto Mandatory
+Float Property MidHealth Auto Mandatory
+
+;Cooldowns: Time, Globals contain a converted Gametime float, which the cooldown### float(s) then check against
+;0.4= 8 hours GT  0.1 = 1 hour GT 0.005 = 30m GT 0.0025= 15mins GT before ability can be used again
+;Cooldown Table
+;Knights: SMA:.1 SRA:.1 EN:.4 HE:N/A SH:N/A BR:N/A CO:.1 BU:.1
+Float Property cooldownBuff1 Auto
+{0.1 = approx 1 Hour GT before ability can be used again}
+Float Property cooldownBuff2 Auto
+{0.1 = approx 1 Hour GT before ability can be used again}
+Float Property cooldownEnrage Auto
+{0.4 = approx 8 Hours GT before ability can be used again}
+Float Property cooldownSMA Auto
+{0.1 = approx 1 Hour GT before ability can be used again}
+Float Property cooldownSRA Auto
+{0.1 = approx 1 Hour GT before ability can be used again}
+Float Property cooldownCon Auto
+{0.1 = approx 1 Hour GT before ability can be used again}
+
+;Global Variables
+GlobalVariable Property myBuCD1 Auto Const
+{Cooldown for: Buff Spell1}
+GlobalVariable Property myBuCD2 Auto Const
+{Cooldown for: Buff Spell2}
+GlobalVariable Property myCoCD Auto Const
+{Cooldown for: Conjure Spells}
+GlobalVariable Property myEnCD Auto Const
+{Cooldown for: Enrage Spells}
+GlobalVariable Property myMaCD Auto Const
+{Cooldown for: Special Melee Attack Spells}
+GlobalVariable Property myRaCD Auto Const
+{Cooldown for: Special Ranged Attack Spells}
+
+;Spell Times
+Int Property BuSTime1 Auto Const
+{Spell time for Buff Spells, matches Spell Duration: 30 Seconds}
+Int Property BuSTime2 Auto Const
+{Spell time for Buff Spells, matches Spell Duration: 30 Seconds}
+Int Property EnSTime Auto Const
+{Spell time for Enrage Spells, matches Spell Duration: 30 Seconds}
+Int Property CoSTime Auto Const
+{Spell time for Conjure Spells, Instant Cast, wait time: 3 seconds}
+Int Property MaSTime Auto Const
+{Spell time for Special Melee Attack Spells, Instant Cast, wait time: 3 seconds}
+Int Property RaSTime Auto Const
+{Spell time for Special Ranged Attack Spells, Instant Cast, wait time: 3 seconds}
+
+
+;Proc Chances
+;Utility.GetRandomFloat() looks for a float between 0 and 1, percentages need to be decimals.
+;ie 10% is 0.1, while 1% is 0.01
+;Knights: SMA:.05 SRA:.03 EN:N/A HE:N/A SH:N/A BR:N/A CO:.03 BU:.01
+Float Property ProcChanceSM Auto Const
+{Proc chance for: Special Melee Knights: SMA:.05}
+Float Property ProcChanceSR Auto Const
+{Proc chance for: Special Ranged Knights: SRA:.03}
+Float Property ProcChanceBU Auto Const
+{Proc chance for: Buff Knights: BU:.01}	
+Float Property ProcChanceCO Auto Const
+{Proc chance for: Conjure Knights: CO:.03}
+
+
+
+;Spell Properties
+Spell Property Buffspell1 Auto Const
+Spell Property Buffspell2 Auto Const
+Spell Property EnrageSpell Auto Const
+Spell Property SMASpell Auto Const
+Spell Property SRASpell Auto Const
+;Topic Properties
+
+;Weapon & Grenade Properties
+Weapon Property cItem Auto Const
+
+
+
+;Function Definitions
+Function Enrage() ;Dauntless Guardian
+	actor akTarget = self.GetCasterActor()
+	if Utility.GetCurrentGameTime() > myEnCD.GetValue()
+		myEnCD.SetValue(Utility.GetCurrentGameTime() +  cooldownEnrage)
+		EnrageSpell.cast(akTarget, akTarget)
+
+	endIf
+EndFunction
+
+Function Buff1() ;Riposte
+	actor akTarget = self.GetCasterActor()
+	if Utility.GetCurrentGameTime() > myBuCD1.GetValue()
+		myBuCD1.SetValue(Utility.GetCurrentGameTime() +  cooldownBuff1)
+		BuffSpell1.cast(akTarget, akTarget)
+	endIf
+EndFunction
+
+Function Buff2() ;Lightning Rod
+	actor akTarget = self.GetCasterActor()
+	if Utility.GetCurrentGameTime() > myBuCD2.GetValue()
+		myBuCD2.SetValue(Utility.GetCurrentGameTime() +  cooldownBuff2)
+		BuffSpell2.cast(akTarget, akTarget)
+	endIf
+EndFunction
+
+Function ProcBuff1()
+	actor akTarget = self.GetCasterActor()
+	if Utility.RandomFloat() <= ProcChanceBU
+		myBuCD1.SetValue(Utility.GetCurrentGameTime() + cooldownBuff1)
+		BuffSpell1.cast(akTarget, akTarget)
+		utility.wait(BuSTime1)
+	endIf
+EndFunction
+
+Function ProcCon()
+	actor akTarget = self.GetCasterActor()
+	if Utility.RandomFloat() <= ProcChanceCO
+		myCoCD.SetValue(Utility.GetCurrentGameTime() + cooldownCon)
+		akTarget.additem(cItem)
+		utility.wait(CoSTime)
+	endIf
+EndFunction
+
+Function Conjure()
+	actor akTarget = self.GetCasterActor()
+	if Utility.GetCurrentGameTime() > myCoCD.GetValue()
+		myCoCD.SetValue(Utility.GetCurrentGameTime() + cooldownCon)
+		akTarget.additem(cItem) ;Where cItem is the conjured item 
+	endIf
+EndFunction
+
+Function ProcSM() ;For non-shadows who proc special Melee remove alt in your script
+	actor akTarget = self.GetCasterActor()
+	if Utility.RandomFloat() <= ProcChanceSM
+		SMASpell.cast(akTarget, akTarget)
+		myActorQuest.myPackM()
+		utility.wait(MaSTime)
+	endIf
+EndFunction
+
+Function ProcSR() ;For anyone who can proc a special Ranged attack
+	actor akTarget = self.GetCasterActor()
+	if Utility.RandomFloat() <= ProcChanceSR
+		SRASpell.cast(akTarget, akTarget)
+		myActorQuest.myPackR()
+		utility.wait(RaSTime)
+	endIf
+EndFunction
+
+Function SRAttack()
+	actor akTarget = self.GetCasterActor()
+	if Utility.GetCurrentGameTime() > myRaCD.GetValue()
+		myRaCD.SetValue(Utility.GetCurrentGameTime() + cooldownSRA)
+		SRASpell.cast(akTarget, akTarget)
+		myActorQuest.myPackR()
+	endIf
+EndFunction
+
+Function SMAttack() ;For Actors who don't use Assassinate remove alt from beginning of Function if they only have one SMASpell
+	actor akTarget = self.GetCasterActor()
+	if Utility.GetCurrentGameTime() > myMaCD.GetValue()
+		myMaCD.SetValue(Utility.GetCurrentGameTime() + cooldownSMA)
+		SMASpell.cast(akTarget, akTarget)
+		myActorQuest.myPackM()
+	endIf
+EndFunction
+
+;End Function Definitions
+
+Event OnEffectStart(Actor akTarget, Actor akCaster)
+    RegisterForHitEvent(akCaster)
+EndEvent
+
+Event OnHit(ObjectReference akTarget, ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, bool abSneakAttack, bool abBashAttack, bool abHitBlocked, string apMaterial)
+	If akTarget.GetValuePercentage(Health) <= LowHealth
+       	 ;Insert Spell Functions for Health level: LOW
+			Enrage() 
+			utility.wait(EnSTime)
+			SRAttack()
+			Conjure()
+			utility.wait(CoSTime) 
+			ProcSM()
+			Buff2()
+			utility.wait(BuSTime2)
+			SMAttack()
+			RegisterForHitEvent(akTarget)
+
+	Elseif akTarget.GetValuePercentage(Health) <= MidHealth
+		;Insert Spell Functions for Health level: Mid
+       		ProcBuff1() ;For Tanks. Assumed spells here are Riposte Leon ChrusherForm Hannah
+			Buff2()
+			utility.wait(BuSTime2) ;where BuSTime1 is the duration of the buff spell
+			ProcCon()
+			SMAttack()
+			ProcSM()
+			SMAttack()
+			ProcSM()
+	       	RegisterForHitEvent(akTarget)
+		
+    Elseif akTarget.GetValuePercentage(Health) <= HighHealth
+			;Insert Spell Functions for Health level: High
+			ProcBuff1() ;For Tanks. Assumed spells here are Riposte Leon ChrusherForm Hannah
+			utility.wait(BuSTime1) ;where BuSTime1 is the duration of the buff spell
+			RegisterForHitEvent(akTarget)
+    endif
+EndEvent
