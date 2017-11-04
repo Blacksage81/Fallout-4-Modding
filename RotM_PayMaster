@@ -1,0 +1,155 @@
+Scriptname RotM_PayMaster extends ObjectReference
+
+
+MiscObject Property Caps Auto Const
+Potion Property Cred6K Auto Const
+MiscObject Property ConShip Auto Const
+MiscObject Property CopShip Auto Const
+MiscObject Property WoodShip Auto Const
+MiscObject Property SteelShip Auto Const
+Potion Property Cred4K Auto Const
+Potion Property Cred3K Auto Const
+GlobalVariable Property EpisodeNum Auto
+GlobalVariable Property OnPayroll Auto
+GlobalVariable Property RewardTier Auto
+GlobalVariable Property DaysPassed Auto
+Potion Property Stalker Auto Const
+Potion Property Snipe Auto Const
+Potion Property SunCe Auto Const
+Potion Property SuperS Auto Const
+
+
+Function T5Reward()
+	if EpisodeNum.GetValue() == 3
+				
+			self.additem(caps, 3000)
+			self.additem(Stalker, 1)
+			self.additem(Snipe, 1)
+			self.additem(SunCe, 1)
+			self.additem(SuperS, 1)
+			self.additem(ConShip, 1)
+			self.additem(CopShip, 1)
+			self.additem(WoodShip, 1)
+			self.additem(SteelShip, 1)
+			self.additem(Cred6K, 1)
+	Elseif EpisodeNum.GetValue() == 2
+			self.additem(caps, 3000)
+			self.additem(Stalker, 1)
+			self.additem(Snipe, 1)
+			self.additem(SunCe, 1)
+			self.additem(SuperS, 1)
+			self.additem(ConShip, 1)
+			self.additem(CopShip, 1)
+			self.additem(WoodShip, 1)
+			self.additem(SteelShip, 1)
+		
+	Elseif EpisodeNum.GetValue() == 1
+			self.additem(caps, 3000)
+			self.additem(Stalker, 1)
+			self.additem(Snipe, 1)
+			self.additem(SunCe, 1)
+			self.additem(SuperS, 1)
+		Endif
+EndFunction
+
+Function T4Reward()
+	if EpisodeNum.GetValue() == 3
+			self.additem(caps, 2500)
+			self.additem(ConShip, 1)
+			self.additem(CopShip, 1)
+			self.additem(WoodShip, 1)
+			self.additem(SteelShip, 1)
+			self.additem(Cred4K, 1)
+		
+	Elseif EpisodeNum.GetValue() == 2
+			self.additem(caps, 2500)
+			self.additem(ConShip, 1)
+			self.additem(CopShip, 1)
+			self.additem(WoodShip, 1)
+			self.additem(SteelShip, 1)
+		
+	Elseif EpisodeNum.GetValue() == 1
+			self.additem(caps, 2500)
+			
+		Endif
+EndFunction
+
+Function T3Reward()
+	if EpisodeNum.GetValue() == 3
+			self.additem(caps, 1500)
+			self.additem(ConShip, 1)
+			self.additem(CopShip, 1)
+			self.additem(WoodShip, 1)
+			self.additem(SteelShip, 1)
+			self.additem(Cred3K, 1)
+		
+	Elseif EpisodeNum.GetValue() == 2
+			self.additem(caps, 1500)
+			self.additem(ConShip, 1)
+			self.additem(CopShip, 1)
+			self.additem(WoodShip, 1)
+			self.additem(SteelShip, 1)
+		
+	Elseif EpisodeNum.GetValue() == 1
+			self.additem(caps, 1500)
+		Endif
+EndFunction
+
+Function T2Reward()
+	if EpisodeNum.GetValue() == 3
+			self.additem(caps, 1250)
+
+	Elseif EpisodeNum.GetValue() == 2
+			self.additem(caps, 1250)
+		
+	Elseif EpisodeNum.GetValue() == 1
+			self.additem(caps, 1250)
+		Endif
+EndFunction
+
+Function T1Reward()
+	if EpisodeNum.GetValue() == 3
+			self.additem(caps, 750)	
+		
+	Elseif EpisodeNum.GetValue() == 2
+			self.additem(caps, 750)
+		
+	Elseif EpisodeNum.GetValue() == 1
+			self.additem(caps, 750)
+		Endif
+EndFunction
+
+Function Payday()
+	;this funtion checks the players reward tier and pays them accordingly.
+		float r = RewardTier.getValue() 
+	if r == 5
+		T5Reward()
+	Elseif r == 4
+		T4Reward()
+	Elseif r == 3
+		T3Reward()
+	Elseif r == 2
+		T2Reward()
+	Elseif r== 1
+		T1Reward()
+		
+	else
+		;reward tier zero. No Soup for you!
+	Endif	
+
+EndFunction
+
+
+
+Event OnCellLoad()
+  Debug.Trace("Every object in this cell has loaded its 3d")
+  float p = OnPayroll.getValue()
+  float d = DaysPassed.getValue()
+  
+  if p == 1
+	;Grats the payer is on the payroll
+		if d == 7
+			Payday()
+		endif
+	Endif
+endEvent
