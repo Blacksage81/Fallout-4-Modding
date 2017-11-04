@@ -1,0 +1,36 @@
+Scriptname RotM_CTFlagScript extends ObjectReference Const
+{This script adds a misc object, grants xp, mods a global, and possibly disbales the activator}
+	
+	;MiscObject Properties
+		MiscObject Property NerveTrifold Auto Const
+		MiscObject Property NerveLog Auto Const
+
+	;Global Properties
+		GlobalVariable Property pRotM_SimPointVal Auto Const
+		GlobalVariable Property pRotM007SimChoice Auto
+		
+	;Quest Script Properties	
+		DSimCounterCTRL Property RotM007 Auto const
+		
+	;Numerical Properties
+		Int Property PointVal Auto Const
+		Int Property XPVal Auto Const
+
+
+Event OnActivate(ObjectReference akActionRef)
+   float mySim = pRotM007SimChoice.GetValue()
+   actor player = Game.GetPlayer()
+   if akActionRef == Game.GetPlayer()   
+		If mySim == 2
+			player.additem(NerveLog)
+			pRotM_SimPointVal.Mod(PointVal)
+			Game.RewardPlayerXP(XPVal)
+
+		Elseif mySim == 3
+			player.additem(NerveTrifold)
+			pRotM_SimPointVal.Mod(PointVal)
+			Game.RewardPlayerXP(XPVal)
+			Self.DisableNoWait()
+		EndIf
+   endif
+EndEvent
