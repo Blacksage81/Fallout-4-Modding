@@ -1,0 +1,15 @@
+Scriptname RotM_NCDChestCtrl extends activemagiceffect
+
+;Script Properties
+RotM_NCDExtender Property pRotM_Bluejay Auto 
+{Quest Script that does the heavy lifting}
+
+Event OnEffectStart(Actor akTarget, Actor akCaster)
+  Debug.Trace("Magic effect was started on " + akTarget)
+	pRotM_Bluejay.ChestSummon()
+endEvent
+
+Event OnEffectFinish(Actor akTarget, Actor akCaster)
+  Debug.Trace("Magic effect fades from " + akTarget)
+	pRotM_Bluejay.ChestDismiss()
+endEvent
