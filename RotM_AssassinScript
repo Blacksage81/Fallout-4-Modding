@@ -1,0 +1,26 @@
+Scriptname RotM_AssassinScript extends activemagiceffect
+
+Explosion Property Smoke Auto Const
+Idle Property myIdle Auto Const
+
+Event OnEffectStart(Actor akTarget, Actor akCaster)
+
+			actor victim = akTarget.GetCombatTarget()
+		If victim != (game.GetPlayer())
+				if (victim.IsInPowerArmor())
+					akTarget.PlaceAtMe(Smoke)
+					victim.PlaceAtMe(Smoke)
+					akTarget.MoveTo(victim, 20, abMatchRotation = true)
+					victim.SwitchtoPowerArmor(None)
+					akTarget.PlayIdlewithTarget(myIdle, victim) 
+					;akTarget.Kill(victim)
+			
+				else
+					akTarget.PlaceAtMe(Smoke)
+					victim.PlaceAtMe(Smoke)
+					akTarget.MoveTo(victim, 20, abMatchRotation = true)
+					akTarget.PlayIdlewithTarget(myIdle, victim) 
+					;akTarget.Kill(victim)
+				endif
+		endif
+endEvent
