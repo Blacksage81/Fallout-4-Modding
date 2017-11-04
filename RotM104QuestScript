@@ -1,0 +1,216 @@
+Scriptname RotM104QuestScript extends Quest
+
+;Actor
+ReferenceAlias Property Malachi Auto Const ; Foe Malachi
+ReferenceAlias Property Leon Auto Const
+ReferenceAlias Property MFrost Auto Const  ; Ally Malachi
+
+
+;Faction
+Faction Property PlayerFaction Auto Const
+
+;Object
+ObjectReference Property MEnt Auto Const
+ObjectReference Property pRotM104_31EMark Auto Const
+ObjectReference Property pRotM104_32EMark Auto Const
+ObjectReference Property pRotM104aS1 Auto Const
+ObjectReference Property pRotM104aS2 Auto Const
+ObjectReference Property pRotM104aS3 Auto Const
+ObjectReference Property pRotM104aS4 Auto Const
+ObjectReference Property pRotM104aS5 Auto Const
+ObjectReference Property NEWaitMark Auto Const
+ObjectReference Property NEWaitMarkL Auto Const
+ObjectReference Property MalaTP2 Auto Const
+ObjectReference Property RotM105LLM Auto Const
+ObjectReference Property RotM105MLM Auto Const
+ObjectReference Property GSPipboy Auto Const
+
+
+;Package
+Package Property Mala104HangB Auto Const
+Package Property Leon104HangB Auto Const
+Package Property Leon104Follow Auto Const
+Package Property Leon104TP Auto Const
+Package Property Mala104TP Auto Const
+Package Property LeonTP2 Auto Const
+Package Property Sandbox Auto Const
+Package Property Dash Auto Const
+Package Property S40Wait Auto Const
+Package Property S51Wait Auto Const
+Package Property S51WaitL Auto Const
+
+
+;Quest
+Quest Property Launcher Auto Const
+
+;Scene
+Scene Property MyScene1 Auto Const
+
+
+;Special
+Explosion Property Puff Auto Const
+ActorValue Property Aggression Auto Const
+Message Property NTBUP Auto Const
+
+;Function Definitions
+
+function Vanish()
+	;Local Props
+	actor MFoe = Malachi.getActorRef()
+	;Props End
+	debug.trace("Ninja Vanish!")
+	MEnt.placeatme(Puff)
+	MFoe.moveto(MEnt)
+EndFunction
+
+function Vanish2()
+	;Local Props
+	actor Mala = MFrost.getActorRef()
+	;Props End
+	debug.trace("Ninja Vanish!")
+	MEnt.placeatme(Puff)
+	Mala.moveto(MEnt)
+endFunction
+
+Function Scatter()
+		Actor MalaREF = MFrost.getActorRef()
+		MalaTP2.placeatme(Puff)
+		MalaREF.moveto(RotM105MLM)
+		Actor LeonREF = Leon.GetActorRef()
+		LeonREF.placeatme(Puff)
+		LeonREF.moveto(RotM105LLM)
+EndFunction
+
+Event OnStageSet(int auiStageID, int auiItemID)
+	if auiStageID == 0
+	
+	;Adding Leon as a teammate... again
+	Actor LeonREF = Leon.GetActorRef()
+	LeonREF.SetPlayerTeammate(abCanDoFavor=False)
+	LeonREF.EvaluatePackage(Leon104Follow)
+	
+	;Faction switch and aggression edit of Malachi_Foe
+	Actor MalaREF = MFrost.GetActorRef()
+	MalaREF.AddtoFaction(PlayerFaction)
+	MalaREF.setValue(Aggression,0) 
+EndIf
+
+if auiStageID == 10
+	;Persue Malachi
+	SetObjectiveDisplayed(10)
+EndIf
+
+if auiStageID == 11
+	;this stage is set by a trigger
+	;Malachi appears and then sets stage to 20
+	Vanish()
+	SetStage(20)
+EndIf
+
+if auiStageID == 20
+	;Confront Malachi
+	SetObjectiveDisplayed(20)
+	SetObjectiveCompleted(10)
+	
+EndIf
+
+if auiStageID == 30
+	MyScene1.Stop()
+	SetObjectiveCompleted(20)
+	actor MFoe = Malachi.getActorRef()
+	;Faction switch and aggression edit of Malachi again.
+	MFoe.RemoveFromFaction(PlayerFaction)
+	MFoe.setValue(Aggression,2) 
+EndIf
+
+
+if auiStageID == 39
+;Android down
+	SetObjectiveCompleted(30)
+	SetStage(40)
+EndIf
+
+if auiStageID == 40
+	;The truth 
+	SetObjectiveDisplayed(40)
+	Vanish2()
+	Actor MalaREF = MFrost.GetActorRef()
+	MalaREF.EvaluatePackage(S40Wait)
+	;Removing Leon as a teammate... again
+	Actor LeonREF = Leon.GetActorRef()
+	LeonREF.SetPlayerTeammate(False)
+	LeonREF.EvaluatePackage(Leon104TP)
+EndIf
+
+
+if auiStageID == 50
+;Return to the Nerve Ending
+	SetObjectiveCompleted(40)
+	SetObjectiveDisplayed(50)
+;Malachi and Leon hang back to steal more data
+	Actor MalaREF = MFrost.GetActorRef()
+	Actor LeonREF = Leon.GetActorRef()
+	
+	MalaREF.EvaluatePackage(Mala104HangB)
+	LeonREF.EvaluatePackage(Leon104HangB)
+;Enables the Pip Boy
+	GSPipboy.EnableNoWait()
+EndIf
+
+if auiStageID == 51
+	;This stage listens for a trigger box, which will then move Malachi and Leon to the Nerve ending.
+		Actor MalaREF = MFrost.GetActorRef()
+		Actor LeonREF = Leon.GetActorRef()
+	
+		MalaREF.Moveto(NEWaitMark)
+		LeonREF.Moveto(NEWaitMarkL)
+	;Malachi and Leon evaluates their wait packages
+		MalaREF.EvaluatePackage(S51Wait)
+		LeonREF.EvaluatePackage(S51WaitL)
+	;Displayes the Message updating the Travel Beacon
+		NTBUP.Show()
+EndIf
+
+if auiStageID == 60
+	SetObjectiveCompleted(50)
+	SetObjectiveDisplayed(60)
+;Start scene trigger will start scene 4
+;Scene 4 will then set Stage 70
+;There is a set Stage trigger that sets stage 61
+EndIf
+
+if auiStageID == 61
+	;Moving Malachi2
+		Actor MalaREF = MFrost.GetActorRef()
+		MalaREF.EvaluatePackage(Mala104TP)
+	;Sends Leon to his Talking point
+		Actor LeonREF = Leon.GetActorRef()
+		LeonREF.EvaluatePackage(LeonTP2)
+		SetObjectiveCompleted(60)
+EndIf
+
+if auiStageID == 70
+	SetObjectiveDisplayed(70)
+EndIf
+
+if auiStageID == 71
+;Dialog scene is done, Leon and Malachi should do their things
+	SetObjectiveCompleted(70)
+	Scatter()
+	SetStage(80)
+EndIf
+
+
+if auiStageID == 80
+;Quest shut down
+Stop()
+EndIf
+
+EndEvent
+
+
+Event OnQuestShutdown()
+  Debug.Trace("This quest has shut down - do any cleanup we need to do")
+	;Sets 001: The Moon Men's Stage to 30 to start 105
+		Launcher.SetStage(50)
+endEvent
