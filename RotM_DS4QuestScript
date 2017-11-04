@@ -1,0 +1,80 @@
+Scriptname RotM_DS4QuestScript extends Quest
+;-------Definition Block--------
+;Numerical Values
+	Int Property PointVal Auto Const
+	Int Property XPVal Auto Const
+;Message Properties
+	Message Property ObjComp Auto Const
+	Message Property myDSObj Auto Const
+
+;Global
+	GlobalVariable Property pRotM_DS4ObjComp Auto Const
+	GlobalVariable Property pRotM_DSMissionFails Auto Const
+	GlobalVariable Property pRotM_DSMissionPass Auto Const
+	GlobalVariable Property pRotM_SimPointVal Auto Const
+	{this contains the value of sim points earned, but I bet you could gather that by the value name, huh?}
+;Function Definitions
+
+;Function Definitions
+
+
+
+;------- End Definition Block--------
+
+
+Event OnStageSet(int auiStageID, int auiItemID)
+if auiStageID == 0
+
+EndIf
+
+if auiStageID == 10
+
+EndIf
+
+if auiStageID == 20
+	;Set By a trigger Displays a message box with objective.
+	myDSObj.Show()
+EndIf
+
+if auiStageID == 30
+
+EndIf
+
+if auiStageID == 40
+
+EndIf
+
+
+if auiStageID == 50
+
+EndIf
+
+if auiStageID == 60
+
+EndIf
+
+if auiStageID == 69
+
+EndIf
+
+if auiStageID == 70
+	ObjComp.Show()
+	;Exit Enabled This Stage sets the Global DS2_ObjComp to 1
+		pRotM_DS4ObjComp.SetValue(1)
+EndIf
+
+if auiStageID == 79
+	;Quit Quest Failed: This stage will Mod the DSMissionFails Global by one
+		pRotM_DSMissionFails.Mod(1)
+EndIf
+
+if auiStageID == 80
+	pRotM_DSMissionPass.Mod(1)
+	pRotM_SimPointVal.Mod(PointVal)
+	Game.RewardPlayerXP(XPVal)
+;Quest Shutdown, Completed Will Mod DSMissionPass by one
+;Quest shut down
+;Stop()
+EndIf
+
+EndEvent
