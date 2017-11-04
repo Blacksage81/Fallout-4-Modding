@@ -1,0 +1,551 @@
+Scriptname RotM001Script extends Quest
+
+
+;-------Definition Block--------
+;Numerical Values
+;Actors
+Actor Property LeonS Auto Const
+Actor Property Missy Auto Const
+Actor Property Mala Auto Const
+ 
+
+;Faction
+	Faction Property NerveFaction Auto Const
+	Faction Property PlayerFaction Auto Const
+	Faction Property ConsortiumFaction Auto Const
+	Faction Property InstituteFaction Auto Const
+	Faction Property MinutemenFaction Auto Const
+	Faction Property BOSFaction Auto Const
+	Faction Property RailroadFaction Auto Const
+	Faction Property GuardianFaction Auto Const
+	Faction Property ISPFaction Auto Const
+	Faction Property CurrentCompanionFaction Auto Const
+	Faction Property pRotMMerchFaction Auto Const
+;Object
+	ObjectReference Property RotM101QSLoc Auto Const
+	ObjectReference Property pRotM105Post10Emark Auto Const
+	ObjectReference Property pRotM105Pre10Emark Auto Const
+	ObjectReference Property pRotMNChemEMark Auto Const
+	ObjectReference Property pRotM101_MapMark Auto Const
+	ObjectReference Property pRotM105_MapMark Auto Const
+	ObjectReference Property pRotM_106QMark Auto Const
+	ObjectReference Property pRotM_106FXMark Auto Const
+	ObjectReference Property pRotM_106SMark Auto Const
+	ObjectReference Property RotM_FabEmarker Auto Const
+;MiscObject Properties
+	MiscObject Property Caps Auto Const
+
+;Message Properties
+	Message Property pRotM001_Mess001 Auto Const
+	Message Property NCDLS Auto Const
+	Message Property NNet_FLog Auto Const
+	Message Property NNet_HLog Auto Const
+	Message Property NNet_LLog Auto Const
+	Message Property NNet_PLog Auto Const
+
+;Potion Property
+	Potion Property beacon Auto Const
+
+;Package
+;Quest
+	Quest Property pRotM101 Auto Const
+	Quest Property pRotM103 Auto Const
+	Quest Property pRotM104 Auto Const
+	Quest Property pRotM105 Auto Const
+	Quest Property pRotM006 Auto Const
+	Quest Property pRotM106 Auto Const
+	Quest Property pRotM107 Auto Const
+	Quest Property pRotM_CA_Malachi Auto Const
+	Quest Property pRotM_CA_Missy Auto Const
+	Quest Property pRotM_CA_Leon Auto Const
+
+
+
+;Scene
+;Special
+	Explosion Property TeleFX Auto Const
+
+		;------RotM101-----
+	ReferenceAlias Property p101LabEnt Auto Const
+	ReferenceAlias Property p101HallTerm Auto Const
+	ReferenceAlias Property p101WareMark Auto Const
+	ReferenceAlias Property p101SecTerm Auto Const
+	ReferenceAlias Property p101AlabTerm Auto Const
+	ReferenceAlias Property p101BlabTerm Auto Const
+	ReferenceAlias Property p101LDTerm Auto Const
+	ReferenceAlias Property p101FreezerTerm Auto Const
+	ReferenceAlias Property p101DirecDesk Auto Const
+	ReferenceAlias Property p101DirecTerm Auto Const
+	ReferenceAlias Property p101ESpawn Auto Const
+	ReferenceAlias Property p101HSpawn Auto Const
+	ReferenceAlias Property p101NEEnt Auto Const
+	ReferenceAlias Property p101OfficeMark Auto Const
+
+		;------RotM102-----
+	ReferenceAlias Property p102Rock1 Auto Const
+	ReferenceAlias Property p102Rock2 Auto Const
+	ReferenceAlias Property p102Rock3 Auto Const
+	ReferenceAlias Property p102Rock4 Auto Const
+	ReferenceAlias Property p102ABarrier Auto Const
+	ReferenceAlias Property p102FxMark Auto Const
+
+		;------RotM103-----
+	ReferenceAlias Property p103BEMark Auto Const
+	ReferenceAlias Property p103BreachMark Auto Const
+	ReferenceAlias Property p103SbTerm Auto Const
+	ReferenceAlias Property p103GTTerm Auto Const
+	ReferenceAlias Property p103DamMark Auto Const
+	ReferenceAlias Property p103BrnMark Auto Const
+	ReferenceAlias Property p103InvesMark Auto Const
+	ReferenceAlias Property p103FootMark Auto Const
+
+		;------RotM104-----
+	ReferenceAlias Property p104PersXMark Auto Const
+	ReferenceAlias Property p104SSpawn1 Auto Const
+	ReferenceAlias Property p104SSpawn2 Auto Const
+	ReferenceAlias Property p104SSpawn4 Auto Const
+	ReferenceAlias Property p104SSpawn3 Auto Const
+	ReferenceAlias Property p104SSpawn5 Auto Const
+	ReferenceAlias Property p104NEXMark Auto Const
+	ReferenceAlias Property p104CCMark Auto Const
+	
+		;------RotM105-----
+	ReferenceAlias Property p105BJailTerm Auto Const
+	ReferenceAlias Property p105DeepMark Auto Const
+	ReferenceAlias Property p105MMark2 Auto Const
+	ReferenceAlias Property p105SagiMark Auto Const
+	ReferenceAlias Property p105ssynth1 Auto Const
+	ReferenceAlias Property p105SSynth2 Auto Const
+	ReferenceAlias Property p105SSynth3 Auto Const
+	ReferenceAlias Property p105SSynth4 Auto Const
+	ReferenceAlias Property p105SSynth5 Auto Const
+	
+	;------RotM106-----
+	ReferenceAlias Property p106Alias1 Auto Const
+	ReferenceAlias Property p106Alias2 Auto Const
+	ReferenceAlias Property p106Alias3 Auto Const
+	ReferenceAlias Property p106Alias4 Auto Const
+	ReferenceAlias Property p106Alias5 Auto Const
+	ReferenceAlias Property p106Alias6 Auto Const
+	ReferenceAlias Property p106Alias7 Auto Const
+	ReferenceAlias Property p106Alias8 Auto Const
+	ReferenceAlias Property p106Alias9 Auto Const
+	ReferenceAlias Property p106Alias10 Auto Const
+	ReferenceAlias Property p106Alias11 Auto Const
+	ReferenceAlias Property p106Alias12 Auto Const
+	ReferenceAlias Property p106Alias13 Auto Const
+	ReferenceAlias Property p106Alias14 Auto Const
+	ReferenceAlias Property p106Alias15 Auto Const
+	ReferenceAlias Property p106Alias16 Auto Const
+	ReferenceAlias Property p106Alias17 Auto Const
+	ReferenceAlias Property p106Alias18 Auto Const
+	ReferenceAlias Property p106Alias19 Auto Const
+	ReferenceAlias Property p106Alias20 Auto Const
+
+	
+	;------RotM107-----
+	ReferenceAlias Property p107Alias1 Auto Const
+	ReferenceAlias Property p107Alias2 Auto Const
+	ReferenceAlias Property p107Alias3 Auto Const
+	ReferenceAlias Property p107Alias4 Auto Const
+	ReferenceAlias Property p107Alias5 Auto Const
+	ReferenceAlias Property p107Alias6 Auto Const
+	ReferenceAlias Property p107Alias7 Auto Const
+	ReferenceAlias Property p107Alias8 Auto Const
+	ReferenceAlias Property p107Alias9 Auto Const
+	ReferenceAlias Property p107Alias10 Auto Const
+
+	
+	
+;Global Properties
+	GlobalVariable Property OnPayroll Auto
+	GlobalVariable Property pRotM_EpisodeNum Auto
+	GlobalVariable Property pRotM_RewardTier Auto
+	GlobalVariable Property pRotM_Payday Auto
+	GlobalVariable Property pRotM_NerveBudget Auto
+
+
+
+;Combat system Cooldown Globals
+	GlobalVariable Property pRotM_saLSDauntlessGCD Auto 
+	GlobalVariable Property pRotM_saLSJavelinCD Auto 
+	GlobalVariable Property pRotM_saLSLRodCD Auto 
+	GlobalVariable Property pRotM_saLSMagRoundCD Auto 
+	GlobalVariable Property pRotM_saLSRiposteCD Auto 
+	GlobalVariable Property pRotM_saLSTBoltCutCD Auto 
+	GlobalVariable Property pRotM_saMFAssassinateCD Auto 
+	GlobalVariable Property pRotM_saMFDrawnBreathCD Auto 
+	GlobalVariable Property pRotM_saMFGlacialShotCD Auto 
+	GlobalVariable Property pRotM_saMFKunaiHealCD Auto 
+	GlobalVariable Property pRotM_saMFKunaiThrowCD Auto 
+	GlobalVariable Property pRotM_saMFMassCloneCD Auto 
+	GlobalVariable Property pRotM_saMFStuntDoubleCD Auto 
+	GlobalVariable Property pRotM_saMMAssassinateCD Auto 
+	GlobalVariable Property pRotM_saMMCloakShellCD Auto 
+	GlobalVariable Property pRotM_saMMKunaiHealCD Auto 
+	GlobalVariable Property pRotM_saMMKunaiThrowCD Auto 
+	GlobalVariable Property pRotM_saMMLibraCD Auto 
+	GlobalVariable Property pRotM_saMMMaimStrikesCD Auto 
+	GlobalVariable Property pRotM_saMMShadowCloneCD Auto 
+
+
+;Function Definitions
+
+Function ConAlign()
+;Makes the Consortium Enemies of the World
+	ConsortiumFaction.SetEnemy(PlayerFaction)
+	ConsortiumFaction.SetEnemy(InstituteFaction)
+	ConsortiumFaction.SetEnemy(BOSFaction)
+	ConsortiumFaction.SetEnemy(MinutemenFaction)
+	ConsortiumFaction.SetEnemy(RailroadFaction)
+	ConsortiumFaction.SetEnemy(CurrentCompanionFaction)
+	ConsortiumFaction.SetEnemy(NerveFaction)
+	ConsortiumFaction.SetEnemy(GuardianFaction)
+	ConsortiumFaction.SetAlly(ISPFaction)
+EndFunction
+
+Function NerveAlign()
+;Faction Alignment
+;Faction.SetEnemy(OtherFaction, True, True) will make the two factions neutral to each other
+	NerveFaction.SetAlly(PlayerFaction)
+	NerveFaction.SetAlly(CurrentCompanionFaction)
+	NerveFaction.SetAlly(GuardianFaction)
+	PlayerFaction.SetAlly(NerveFaction)
+	PlayerFaction.SetAlly(pRotMMerchFaction)
+	CurrentCompanionFaction.SetAlly(NerveFaction)
+	NerveFaction.SetEnemy(ConsortiumFaction)
+	NerveFaction.SetEnemy(ISPFaction)
+	NerveFaction.SetEnemy(InstituteFaction, True, True)
+	NerveFaction.SetEnemy(BOSFaction, True, True)
+	NerveFaction.SetEnemy(MinutemenFaction, True, True)
+	MinutemenFaction.SetEnemy(NerveFaction, True, True)
+	NerveFaction.SetEnemy(RailroadFaction, True, True)
+EndFunction
+
+Function GuardAlign()
+;Faction Alignment
+	GuardianFaction.SetAlly(PlayerFaction)
+	GuardianFaction.SetAlly(CurrentCompanionFaction)
+	GuardianFaction.SetAlly(NerveFaction)
+	GuardianFaction.SetEnemy(ConsortiumFaction)
+	GuardianFaction.SetEnemy(ISPFaction)
+	GuardianFaction.SetEnemy(InstituteFaction, True, True)
+	GuardianFaction.SetEnemy(BOSFaction, True, True)
+	GuardianFaction.SetEnemy(MinutemenFaction, True, True)
+	MinutemenFaction.SetEnemy(GuardianFaction, True, True)
+	GuardianFaction.SetEnemy(RailroadFaction, True, True)
+	PlayerFaction.SetAlly(GuardianFaction)
+	CurrentCompanionFaction.SetAlly(GuardianFaction)
+EndFunction
+
+Function ISPAlign()
+;Makes the Special Projects Enemies of the World
+	ISPFaction.SetEnemy(PlayerFaction)
+	ISPFaction.SetEnemy(InstituteFaction)
+	ISPFaction.SetEnemy(BOSFaction)
+	ISPFaction.SetEnemy(MinutemenFaction)
+	ISPFaction.SetEnemy(RailroadFaction)
+	ISPFaction.SetEnemy(NerveFaction)
+	ISPFaction.SetEnemy(CurrentCompanionFaction)
+	ISPFaction.SetEnemy(GuardianFaction)
+	ISPFaction.SetAlly(ConsortiumFaction)
+EndFunction
+
+Function RotM106Timer()                
+  StartTimerGameTime(6, pRotm106ID) ; Create the timer with a 12 hour game-time duration
+EndFunction
+
+	Function Persistant101()
+		p101LabEnt.Clear()
+		p101HallTerm.Clear()
+		p101WareMark.Clear()
+		p101SecTerm.Clear()
+		p101AlabTerm.Clear()
+		p101BlabTerm.Clear()
+		p101LDTerm.Clear()
+		p101FreezerTerm.Clear()
+		p101DirecDesk.Clear()
+		p101DirecTerm.Clear()
+		p101OfficeMark.Clear()
+		p101ESpawn.Clear()
+		p101HSpawn.Clear()
+		p101NEEnt.Clear()
+	Endfunction
+
+	Function Persistant102()
+		p102Rock1.Clear()
+		p102Rock2.Clear()
+		p102Rock3.Clear()
+		p102Rock4.Clear()
+		p102ABarrier.Clear()
+		p102FxMark.Clear()
+	Endfunction
+
+	Function Persistant103()
+		p103BEMark.Clear()
+		p103BreachMark.Clear()
+		p103SbTerm.Clear()
+		p103GTTerm.Clear()
+		p103BrnMark.Clear()
+		p103InvesMark.Clear()		
+		p103DamMark.Clear()
+		p103FootMark.Clear()
+	Endfunction
+
+	Function Persistant104()
+		p104PersXMark.Clear()
+		p104SSpawn1.Clear()
+		p104SSpawn2.Clear()
+		p104SSpawn4.Clear()
+		p104SSpawn3.Clear()
+		p104SSpawn5.Clear()
+		p104NEXMark.Clear()
+		p104CCMark.Clear()
+	Endfunction
+
+	Function Persistant105()
+		p105BJailTerm.Clear()
+		p105DeepMark.Clear()
+		p105MMark2.Clear()
+		p105SagiMark.Clear()
+	 	p105ssynth1.Clear()
+		p105SSynth2.Clear()
+		p105SSynth3.Clear()
+		p105SSynth4.Clear()
+		p105SSynth5.Clear()
+	Endfunction
+
+	Function Persistant106()
+		p106Alias1.Clear()
+	    p106Alias2.Clear()
+		p106Alias3.Clear()
+		p106Alias4.Clear()
+		p106Alias5.Clear()
+		p106Alias6.Clear()
+		p106Alias7.Clear()
+		p106Alias8.Clear()
+		p106Alias9.Clear()
+		p106Alias10.Clear()
+		p106Alias11.Clear()
+		p106Alias12.Clear()
+		p106Alias13.Clear()
+		p106Alias14.Clear()
+		p106Alias15.Clear()
+		p106Alias16.Clear()
+		p106Alias17.Clear()
+		p106Alias18.Clear()
+		p106Alias19.Clear()
+		p106Alias20.Clear()
+	Endfunction
+
+	Function Persistant107()
+		p107Alias1.Clear()
+		p107Alias2.Clear()
+		p107Alias3.Clear()
+		p107Alias4.Clear()
+		p107Alias5.Clear()
+		p107Alias6.Clear()
+		p107Alias7.Clear()
+		p107Alias8.Clear()
+		p107Alias9.Clear()
+		p107Alias10.Clear()
+	Endfunction
+;------- End Definition Block--------
+
+int pRotm106ID = 10 ; Give our timer an ID we can remember
+ 
+Event OnTimerGameTime(int aiTimerID)		
+  If aiTimerID == pRotm106ID ; The 12 hour timer we started just expired
+    Debug.Trace("Timer ended! Do some cool stuff now...")
+    ; If we wanted to have the timer start over, we could now do StartTimerGameTime again...
+	SetStage(61)
+  EndIf
+EndEvent
+
+Event OnStageSet(int auiStageID, int auiItemID)
+
+if auiStageID == 5
+		Game.getPlayer().additem(beacon,1)
+		pRotM001_Mess001.Show()
+		Game.getPlayer().addToFaction(NerveFaction)
+			;Initializes the Raward Tier and Budget Globals
+			;Meaning player can donate but is not yet on the Payroll
+			pRotM_RewardTier.SetValue(0)
+			pRotM_NerveBudget.SetValue(0) 
+	EndIf
+
+if auiStageID == 10		
+		LeonS.SetNoBleedoutRecovery(false)
+		Missy.SetNoBleedoutRecovery(false)
+		Mala.SetNoBleedoutRecovery(false)
+		pRotMNChemEMark.EnableNoWait()
+		pRotM101_MapMark.addtoMap(true)
+		actor Player = Game.GetPlayer()
+		Player.PlaceatMe(TeleFX)
+		Player.Moveto(RotM101QSLoc)
+		RotM101QSLoc.PlaceatMe(TeleFX)
+		pRotM101.Start()
+		pRotM101.SetObjectiveDisplayed(20)
+		SetStage(20)
+EndIf
+
+if auiStageID == 20
+;Initializing The Globals
+	;Leon Seyhak
+pRotM_saLSDauntlessGCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saLSJavelinCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saLSLRodCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saLSMagRoundCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saLSRiposteCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saLSTBoltCutCD.SetValue(Utility.GetCurrentGameTime())
+
+pRotM_CA_Leon.UpdateCurrentInstanceGlobal(pRotM_saLSDauntlessGCD)
+pRotM_CA_Leon.UpdateCurrentInstanceGlobal(pRotM_saLSJavelinCD)
+pRotM_CA_Leon.UpdateCurrentInstanceGlobal(pRotM_saLSLRodCD)
+pRotM_CA_Leon.UpdateCurrentInstanceGlobal(pRotM_saLSMagRoundCD)
+pRotM_CA_Leon.UpdateCurrentInstanceGlobal(pRotM_saLSRiposteCD)
+pRotM_CA_Leon.UpdateCurrentInstanceGlobal(pRotM_saLSTBoltCutCD)
+
+
+	;Malachi Frost
+pRotM_saMFAssassinateCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saMFDrawnBreathCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saMFGlacialShotCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saMFKunaiHealCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saMFKunaiThrowCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saMFMassCloneCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saMFStuntDoubleCD.SetValue(Utility.GetCurrentGameTime())
+
+pRotM_CA_Malachi.UpdateCurrentInstanceGlobal(pRotM_saMFAssassinateCD)
+pRotM_CA_Malachi.UpdateCurrentInstanceGlobal(pRotM_saMFDrawnBreathCD)
+pRotM_CA_Malachi.UpdateCurrentInstanceGlobal(pRotM_saMFGlacialShotCD)
+pRotM_CA_Malachi.UpdateCurrentInstanceGlobal(pRotM_saMFKunaiHealCD)
+pRotM_CA_Malachi.UpdateCurrentInstanceGlobal(pRotM_saMFKunaiThrowCD)
+pRotM_CA_Malachi.UpdateCurrentInstanceGlobal(pRotM_saMFMassCloneCD)
+pRotM_CA_Malachi.UpdateCurrentInstanceGlobal(pRotM_saMFStuntDoubleCD)
+
+	;Ms. Mystery
+pRotM_saMMAssassinateCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saMMCloakShellCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saMMKunaiHealCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saMMKunaiThrowCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saMMLibraCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saMMMaimStrikesCD.SetValue(Utility.GetCurrentGameTime())
+pRotM_saMMShadowCloneCD.SetValue(Utility.GetCurrentGameTime())
+
+pRotM_CA_Missy.UpdateCurrentInstanceGlobal(pRotM_saMMAssassinateCD)
+pRotM_CA_Missy.UpdateCurrentInstanceGlobal(pRotM_saMMCloakShellCD)
+pRotM_CA_Missy.UpdateCurrentInstanceGlobal(pRotM_saMMKunaiHealCD)
+pRotM_CA_Missy.UpdateCurrentInstanceGlobal(pRotM_saMMKunaiThrowCD)
+pRotM_CA_Missy.UpdateCurrentInstanceGlobal(pRotM_saMMLibraCD)
+pRotM_CA_Missy.UpdateCurrentInstanceGlobal(pRotM_saMMShadowCloneCD)
+
+
+
+EndIf
+
+if auiStageID == 30
+	pRotM_106QMark.Disable()
+	pRotM_106FXMark.Disable()
+	pRotM_106SMark.Disable()
+	ConAlign()
+	ISPAlign()
+	NerveAlign()
+	GuardAlign()
+		;Displays Loremaster Log Update Messages	
+			NNet_LLog.Show()
+	pRotm103.Start()
+	pRotm103.SetStage(10)
+;Clears the Persistant Alias' from RotM101
+	Persistant101()
+
+EndIf
+
+
+if auiStageID == 40
+	NNet_HLog.Show()
+	NNet_FLog.Show()
+	NNet_LLog.Show()
+	pRotm104.Start()
+	pRotm104.SetStage(10)
+;Clears persistant Alias' from 102
+	Persistant102()
+EndIf
+
+
+if auiStageID == 50
+	pRotM105Post10Emark.Enable()
+	pRotM105Pre10Emark.Disable()
+		pRotm105.Start()
+	pRotM105_MapMark.Enable()
+	pRotM105_MapMark.addtoMap(True)
+	
+		;Displays Loremaster Log Update Messages
+		NNet_HLog.Show()
+		NNet_FLog.Show()
+		NNet_LLog.Show()
+
+;Clears the Persistant Alias From 103
+		Persistant103()	
+
+;Clears Persistant Alias From RotM 104
+		Persistant104()
+EndIf
+
+if auiStageID == 60
+	;Clears the persistant Alias of 105
+		Persistant105()
+;Pays the Player and puts them on the Nerve Payroll
+Game.GetPlayer().AddItem(Caps, 5000, False)
+	OnPayroll.SetValue(1)
+	pRotM_Payday.SetValue(0)
+;Starts 006 Training Day
+
+	pRotM006.Start()
+	pRotm006.SetStage(10)
+	;Displays Loremaster Log Update Messages
+	NNet_HLog.Show()
+	NNet_FLog.Show()
+	NNet_LLog.Show()
+	NNet_PLog.Show()
+	;need a remote event for the timer....
+	RotM106Timer()
+EndIf
+
+if auiStageID == 61
+	NCDLS.Show()
+	SetStage(62)
+EndIf
+
+if auiStageID == 62
+	pRotM106.Start()
+	pRotm106.SetStage(0)
+	pRotM_106QMark.Enable()
+	pRotM_106FXMark.Enable()
+	pRotM_106SMark.Enable()
+
+EndIf
+
+if auiStageID == 70
+	pRotM107.Start()
+	pRotm107.SetStage(0)
+	;Clears 106
+		Persistant106()
+		RotM_FabEmarker.Enable()
+EndIf
+
+
+
+if auiStageID == 80
+
+
+	;Clears 107
+		Persistant107()
+	;Displays Loremaster Log Update Message
+	NNet_LLog.Show()	
+;Quest shut down
+Stop()
+
+EndIf
+
+EndEvent
