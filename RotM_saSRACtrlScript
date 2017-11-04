@@ -1,0 +1,29 @@
+Scriptname RotM_saSRACtrlScript extends activemagiceffect
+{This script actually casts the Aimed spell at the combat target.}
+
+;Script Properties
+;RotM_CombatExtender Property myActorQuest Auto 
+;{myActorQuest needs to point to this Actors Dialog Quest}
+;Not sure if I'll need the above, but I'll leave it just in case
+
+Spell Property mySpell Auto Const
+
+Actor Property myActor Auto Const
+
+Action Property ActionSighted Auto Const
+Action Property ActionFireCharge Auto Const
+Action Property ActionSightedRelease Auto Const
+Action Property ActionReload Auto Const
+
+
+Event OnEffectStart(Actor akTarget, Actor akCaster)
+			akTarget = myActor
+			actor victim = akTarget.GetCombatTarget()
+		If victim != (game.GetPlayer())
+			myActor.PlayIdleAction(ActionSighted)
+			myActor.PlayIdleAction(ActionFireCharge)
+			mySpell.Cast(myActor, victim)
+			myActor.PlayIdleAction(ActionSightedRelease)
+			myActor.PlayIdleAction(ActionReload)			
+		endif
+endEvent
