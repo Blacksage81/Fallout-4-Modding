@@ -1,0 +1,69 @@
+Scriptname RotM007ExitScript extends ObjectReference Const
+
+	;Global Properties
+		GlobalVariable Property pRotM007SimChoice Auto Const
+		GlobalVariable Property pRotM_DS1KillCount Auto Const
+		GlobalVariable Property pRotM_DS2ItemCount Auto Const
+		GlobalVariable Property pRotM_DS3ItemCount Auto Const
+		GlobalVariable Property pRotM_DS4KillCount Auto Const
+	;Int Properties
+	
+		Int Property myDS1CompStage Auto Const
+		Int Property myDS2CompStage Auto Const
+		Int Property myDS3CompStage Auto Const
+		Int Property myDS4CompStage Auto Const
+
+	;Message Properties
+		Message Property RotM_DSObjNotCompMess Auto Const
+
+	;MiscObject Properties
+		MiscObject Property NerveTrifold Auto Const
+		MiscObject Property NerveLog Auto Const
+	
+	;Quest Properties
+		Quest Property pRotM007 Auto Const
+		Quest Property pRotMDSim1 Auto Const
+		Quest Property pRotMDSim2 Auto Const
+		Quest Property pRotMDSim3 Auto Const
+		Quest Property pRotMDSim4 Auto Const
+	
+	;Quest Script Properties	
+		DemStagesScript Property RotM007 Auto const
+
+
+	Event OnActivate(ObjectReference akActionRef)
+		actor player = Game.GetPlayer()
+		if akActionRef == Game.GetPlayer() 
+				If pRotM007SimChoice.GetValue() == 1
+					if myDS1CompStage == pRotMDSim1.GetStage()
+						pRotM_DS1KillCount.SetValue(0)	
+						RotM007.DemStages()	
+					Else
+						RotM_DSObjNotCompMess.Show()
+					endif
+				Elseif pRotM007SimChoice.GetValue() == 2
+					if myDS2CompStage == pRotMDSim2.GetStage()
+						player.removeitem(NerveLog, 5)
+						pRotM_DS2ItemCount.SetValue(0)						
+						RotM007.DemStages()	
+					Else
+						RotM_DSObjNotCompMess.Show()
+					endif
+				Elseif pRotM007SimChoice.GetValue() == 3
+					if myDS3CompStage == pRotMDSim3.GetStage()
+						player.removeitem(NerveTrifold, 5)
+						pRotM_DS3ItemCount.SetValue(0)						
+						RotM007.DemStages()	
+					Else
+						RotM_DSObjNotCompMess.Show()
+					endif
+				Elseif pRotM007SimChoice.GetValue() == 4
+					if myDS4CompStage == pRotMDSim4.GetStage()
+						pRotM_DS4KillCount.SetValue(0)						
+						RotM007.DemStages()	
+					Else
+						RotM_DSObjNotCompMess.Show()
+					endif
+				EndIf	
+		endif
+EndEvent
