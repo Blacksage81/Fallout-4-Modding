@@ -1,0 +1,24 @@
+Scriptname RotM_saSCleanUpScript extends Actor Const
+
+
+;Explosion Properties
+Explosion Property pRotM_VanishExplosion Auto Const
+
+Function CleanUp()
+		self.placeatme(pRotM_VanishExplosion)
+		self.RemoveAllItems()
+		self.DisableNoWait()
+		self.Kill()
+EndFunction
+
+
+Event OnCombatStateChanged(Actor akTarget, int aeCombatState)
+    if (aeCombatState == 0)
+				CleanUp()
+        UnregisterForAllEvents()
+    endif
+EndEvent
+
+	Event OnDying(Actor akKiller)
+			CleanUp()
+	EndEvent
