@@ -1,0 +1,156 @@
+Scriptname RotM101QuestScript extends Quest
+
+
+;Actor Properties
+	ReferenceAlias Property Lorelei Auto Const
+	ReferenceAlias Property Blasto Auto Const
+	Actor Property AllybT1 Auto Const
+	Actor Property HostbT1 Auto Const
+
+;Holo-Tape Properties
+	Holotape Property ATape Auto Const
+	Holotape Property BTape Auto Const
+
+;Object
+	ObjectReference Property DirTerm Auto
+	ObjectReference Property p101EMark Auto Const
+	ObjectReference Property p101AMark Auto Const
+	ObjectReference Property NE1_MapMarker Auto Const
+
+;Package
+
+;Cell
+	Cell Property pRotMOutpost01 Auto Const
+
+Event OnStageSet(int auiStageID, int auiItemID)
+	if auiStageID == 0
+		;Disables Blasto 9001 
+		Blasto.getActorRef().Disable()
+		p101AMark.Disable()
+	EndIf
+
+	if auiStageID == 20
+		;Stage transition from 20 to 30 is controlled via the trigger in the hallway
+		SetObjectiveDisplayed(20)
+	EndIf
+
+	if auiStageID == 30
+		;Objectives
+		SetObjectiveCompleted(20)
+		SetObjectiveDisplayed(30)
+	EndIf
+
+	if auiStageID == 31
+	;Stage set by DefaultAliasonDeath on Lorelei RefAlias
+		SetObjectiveCompleted(30)
+		SetStage(40)
+	EndIf
+
+	if auiStageID == 40
+		;This stage waits on input from the Hall Terminal. Stages 50-70 are controlled via Terminals and Holotapes.
+		SetObjectiveDisplayed(40)
+	EndIf
+
+	if auiStageID == 41
+		;Dark Warehouse of DOOOM!
+		;This stage waits on both Big Berth and Little Lucy to be killed via the script defaultcounterquesta
+		;and the script defaultCounterAliasIncOnceOnDeathA on each Alias
+	EndIf
+
+	if auiStageID == 50
+		SetObjectiveCompleted(41)
+		SetObjectiveDisplayed(50)
+	;Stage set 60 set by Security terminal
+	EndIf
+
+	if auiStageID == 60
+		;Stage set by DefaultrefonContainerChange on DirecCred Password
+	EndIf
+
+	if auiStageID == 61
+		;Stage set by DefaultrefonContainerChange on AlphaTape
+			SetObjectiveCompleted(60)
+			SetObjectiveDisplayed(61)
+	EndIf
+
+	if auiStageID == 62
+		;Set when player grabs alpha tape prompts to Bravo tape
+		SetObjectiveCompleted(61)
+		SetObjectiveDisplayed(62)
+	EndIf
+
+
+	if auiStageID == 64
+		;Stage set the "Access the Office Wing" 
+		SetObjectiveCompleted(62)
+		SetObjectiveDisplayed(64)
+	EndIf
+
+	if auiStageID == 65
+		;Stage set the "Neutralize the opposition" 
+		SetObjectiveCompleted(64)
+		SetObjectiveDisplayed(65)
+	EndIf
+
+
+	if auiStageID == 69
+		;Stage set the "Compile Research" Terminal entry on the Lab Director's term
+			SetObjectiveCompleted(65)
+			SetObjectiveDisplayed(69)
+	EndIf
+
+	if auiStageID == 70
+		;This Stage was set by a Terminal directs the Player to the Vault
+		SetObjectiveCompleted(69)
+		SetObjectiveDisplayed(70)
+	EndIf
+
+
+	if auiStageID == 79
+		;This Stage was Set by the DefaultrefonContainerChange(spelling) on the Recipie Holotape
+		Blasto.getActorRef().EnableNoWait()
+		SetStage(80)
+	EndIf
+
+	if auiStageID == 80
+		;This stage waits on The player to Kill Blasto, DefaultAliasonDeath sets 81
+		SetObjectiveCompleted(70)
+		SetObjectiveDisplayed(80)
+	EndIf
+
+	if auiStageID == 81
+		;This stage is set on Blasto's death.
+		;todo: Clean up reaming enemies like in When Freedom Calls.
+		;Update not needed as all the enemies are leveled actors
+		;todo2: Set up Friendly NPC's and turret to be controlled via Enable Marker and add a "End LockDown" Terminal entry to Machete's Terminal
+		;Update: Done
+		;todo3: Light switches... I really don't want to. 
+		;Update, I'm not.
+		SetObjectiveCompleted(80)
+		SetObjectiveDisplayed(90)
+	EndIf
+
+	if auiStageID == 90
+		;Reset the security system
+		p101EMark.Disable()
+		p101AMark.Enable()
+		SetStage(100)
+	EndIf
+
+	if auiStageID == 100
+		;Access the Nerve Ending
+			SetObjectiveCompleted(90)
+			SetObjectiveDisplayed(100)
+		; Allow this Nerve Location as a fast travel location
+			NE1_MapMarker.Enable()
+			NE1_MapMarker.addtoMap(true)
+			pRotMOutpost01.EnableFastTravel()
+	EndIf
+
+	if auiStageID == 110
+		;Quest shut down Stage set by a trigger in the Nerve Ending
+		SetObjectiveCompleted(100)
+		Stop()
+	EndIf
+
+EndEvent
