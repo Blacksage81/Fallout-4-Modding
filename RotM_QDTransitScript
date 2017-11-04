@@ -1,0 +1,43 @@
+Scriptname RotM_QDTransitScript extends ObjectReference 
+
+{Quick and Dirty solution to Post 107 Train Transitions. Based off of the DefaultActivateSelf Base Script}
+
+;Enable Layers
+	InputEnableLayer EnableLayer	
+;ObjectReference Properties
+	ObjectReference Property TargDoor Auto Const
+	ObjectReference Property TargMark Auto Const
+;Quest Properties
+	Quest Property myQuest Auto Const
+;Special
+	Sound Property OBJTrainMoveLPM Auto const
+	
+Function Transit()
+
+	EnableLayer = InputEnableLayer.Create()
+		EnableLayer.DisablePlayerControls(abMovement = false, abFighting = true, abCamSwitch = true, abLooking = false, abSneaking = true, \
+			abMenu = true, abActivate = false, abJournalTabs = true, abVATS = true, abFavorites = true)
+		;EnableLayer.EnableSprinting(false)
+	
+	;fade game out
+	Game.FadeOutGame(abFadingOut=True, abBlackFade=False, afSecsBeforeFade=0.0, afFadeDuration=3.0, abStayFaded=True)
+	;play transition soundfx
+		;Need Train Sound
+					OBJTrainMoveLPM.Play(Game.GetPlayer())
+	
+	;The part the moves the Player	
+		;wait a few seconds, then move player
+					Utility.Wait(2.0)
+					Game.GetPlayer().Moveto(TargMark)
+					Utility.Wait(1.0)
+					TargDoor.Activate(Game.GetPlayer())
+		; enable player controls completely
+	EnableLayer.Delete()
+EndFunction
+
+
+	Event onTriggerEnter(objectReference triggerRef)
+			if triggerRef == Game.GetPlayer() && myQuest.IsCompleted()
+				Transit()
+		endif
+	endEvent
