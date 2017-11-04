@@ -1,0 +1,65 @@
+Scriptname RotM007MobChoice3 extends Terminal
+
+
+;-------Definition Block--------
+;Numerical Values
+;Actors
+;Actor Values
+;Cell 
+;Global Properties
+GlobalVariable Property pRotM007SimChoice Auto
+GlobalVariable Property pRotM007MobChoice Auto
+
+;Faction
+;Object
+;Package
+;Quest
+Quest Property myQuest Auto Const
+
+;ReferenceAlias Properties
+;Scene
+;Special
+
+;Function Definitions
+
+
+
+
+
+;End Function Block--------
+;End Definition Block--------
+
+Event OnMenuItemRun(int ID, ObjectReference akTerminalRef)
+
+
+If ID == 1 ; Sets MobChoice Global to 1
+		pRotm007MobChoice.SetValue(1)
+		MyQuest.SetStage(5)
+	EndIf
+If ID == 2 ; Sets MobChoice Global to 2
+		pRotm007MobChoice.SetValue(2)
+		MyQuest.SetStage(5)
+	EndIf
+If ID == 3 ; Sets MobChoice Global to 3
+		pRotm007MobChoice.SetValue(3)
+		MyQuest.SetStage(5)
+	EndIf
+If ID == 4 ; Sets MobChoice Global to 4
+		pRotm007MobChoice.SetValue(4)
+		MyQuest.SetStage(5)
+	EndIf
+If ID == 5 ; Sets MobChoice Global to 5
+		pRotm007MobChoice.SetValue(5)
+		MyQuest.SetStage(5)
+	EndIf	
+If ID == 6 ;
+
+	EndIf
+;If ID == 7
+	;
+	;EndIf
+;If ID == 8
+	;
+	;EndIf
+
+EndEvent
