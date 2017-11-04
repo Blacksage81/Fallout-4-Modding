@@ -1,0 +1,97 @@
+Scriptname RotM_saLSBaseScript extends Actor
+
+
+;Actor Value Properties
+ActorValue Property Health Auto
+
+;Float Properties
+Float Property LowHealth Auto Mandatory
+{0.3}
+Float Property MidHealth Auto Mandatory
+{0.5}
+Float Property HighHealth Auto Mandatory
+{0.8}
+
+;Script Properties
+RotM_CombatExtender Property myActorQuest Auto 
+{myActorQuest needs to point to this Actors Dialog Quest}
+
+
+;Function Definitions
+	;I don't think I will need functions on the actor script as the quest script is all functions.
+;End Function Block
+
+;The function calls I'll use will be something like this
+;myActorQuest.SpellFuncName()
+; EX: myActorQuest.Enrage()
+; EX: myActorQuest.BRep()
+; EX: myActorQuest.ProcRage()
+; EX: myActorQuest.SMAttack()
+; EX: myActorQuest.ProcSM()
+; EX: myActorQuest.SRAttack()
+; EX: myActorQuest.ProcSR()
+; EX: myActorQuest.Conjure()
+; EX: myActorQuest.ProcCon()
+; EX: myActorQuest.SelfHeal()
+; EX: myActorQuest.ProcSHeal()
+; EX: myActorQuest.Heal()
+; EX: myActorQuest.ProcBuff1()
+; EX: myActorQuest.Buff1()
+; EX: myActorQuest.ProcBuff2()
+; EX: myActorQuest.Buff2()
+
+
+
+Event OnCombatStateChanged(Actor akTarget, int aeCombatState)
+    if (aeCombatState == 0)
+        UnregisterForAllEvents()
+    else ;combat state one or two
+		;Insert Appropiate Function calls here.
+		myActorQuest.ProcCon()
+		myActorQuest.ProcRage()
+		myActorQuest.altProcSM()
+		myActorQuest.ProcSR()
+        RegisterForHitEvent(self)
+    endif
+EndEvent
+
+Event OnHit(ObjectReference akTarget, ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, \
+  bool abSneakAttack, bool abBashAttack, bool abHitBlocked, string apMaterial)
+    If GetValuePercentage(Health) <= LowHealth
+			;Insert Appropiate Function calls here.
+				myActorQuest.Enrage()
+				myActorQuest.SRAttack()
+				myActorQuest.Buff2()
+				myActorQuest.ProcCon()
+				myActorQuest.altSMAttack()
+				myActorQuest.SRAttack()
+        utility.wait(1)			
+        RegisterForHitEvent(self)
+
+	Elseif GetValuePercentage(Health) > MidHealth
+			;Insert Appropiate Function calls here.
+				myActorQuest.ProcSR()
+				myActorQuest.Buff2()
+				myActorQuest.Conjure()
+				myActorQuest.altSMAttack()
+				myActorQuest.ProcBuff1()
+        		utility.wait(1)	
+       		 RegisterForHitEvent(self)
+		
+    Elseif GetValuePercentage(Health) > HighHealth
+			;Insert Appropiate Function calls here.
+				myActorQuest.ProcSR()
+				myActorQuest.Buff1()
+				myActorQuest.altSMAttack()
+				myActorQuest.ProcBuff2()
+				myActorQuest.ProcBuff1()
+				myActorQuest.ProcSM()
+        utility.wait(1)
+        RegisterForHitEvent(self)
+    endif
+EndEvent
+
+Event OnEnterBleedout()
+  Debug.Trace("We entered bleedout...")
+  myActorQuest.Enrage()
+endEvent
