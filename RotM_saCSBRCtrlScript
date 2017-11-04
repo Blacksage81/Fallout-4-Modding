@@ -1,0 +1,12 @@
+Scriptname RotM_saCSBRCtrlScript extends activemagiceffect
+{This Script is placed on Body Replacement Magic effects to control the Explosion spawned, and the actor it spawns on top of}
+
+Actor Property myActor Auto Const
+Explosion Property myExplo Auto Const
+
+
+Event OnEffectStart(Actor akTarget, Actor akCaster)
+  Debug.Trace("Magic effect was started on " + akTarget)
+		akTarget = myActor
+		myActor.PlaceAtMe(myExplo)
+endEvent
