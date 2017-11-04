@@ -1,0 +1,208 @@
+Scriptname RotM103QuestScript extends Quest
+
+;Scene
+	Scene Property RotM103D1 Auto Const
+	Scene Property RotM103D2 Auto Const
+
+	
+;Quest
+	Quest Property Launcher Auto Const
+
+
+;Faction
+	Faction Property PlayerFaction Auto Const
+
+;Package
+	Package Property Parlay Auto Const
+	Package Property LeonFollowPackage Auto Const
+	Package Property TalkingPoint Auto Const
+	Package Property Sandbox Auto Const
+	Package Property CSIPackage Auto Const
+	Package Property CSIGreet Auto Const
+
+;ActorRef Properties
+	ReferenceAlias Property Burn Auto Const
+	ReferenceAlias Property Sawbones Auto Const
+	ReferenceAlias Property Slash Auto Const
+	ActorValue Property Aggression Auto Const
+	ReferenceAlias Property Alias_Knight Auto Const
+
+;Object Properties
+	ObjectReference Property pBossMark Auto Const
+	ObjectReference Property NCDMark Auto Const
+
+;Message Properties
+	Message Property pRotM103_NCDPrimer Auto Const
+;Explosion Properties
+	Explosion Property TeleXp Auto Const
+
+;Potion Properties
+	Potion Property pRotM_NCD Auto Const
+
+
+Event OnStageSet(int auiStageID, int auiItemID)
+if auiStageID == 0
+	;Start Quest Waits to be set by 102_dialog
+EndIf
+
+if auiStageID == 10
+	;Enables the victims needed for Quest progression. 
+	;If 102's End quest event was done right it should have displayed this objective
+	SetObjectiveDisplayed(10)
+	pBossMark.Enable()
+	;Adds Leon as a Team mate
+	Actor LeonREF = Alias_Knight.GetActorRef()
+	LeonREF.SetPlayerTeammate(abCanDoFavor=False)
+	LeonREF.EvaluatePackage(LeonFollowPackage)
+	;Stage 20 set by stage 16
+	;Stage 30 set by DefaultAliasonDeath on Sawbones RefAlias
+	;Stage 38 set by a Terminal entry
+EndIf
+
+if auiStageID == 11
+
+	;Ensuring that Leon Runs the CSI Package
+	Actor LeonREF = Alias_Knight.GetActorRef()
+	LeonREF.SetPlayerTeammate(False)
+	LeonREF.EvaluatePackage(CSIGreet)
+	SetObjectiveDisplayed(11)
+	SetObjectiveCompleted(10)
+EndIf
+
+if auiStageID == 12
+	;Sits here and looks pretty
+	Actor LeonREF = Alias_Knight.GetActorRef()
+	LeonREF.EvaluatePackage(CSIPackage)
+	;Actually waits on the first activator's script which sets 13
+EndIf
+
+if auiStageID == 13
+	SetObjectiveCompleted(12)
+	SetObjectiveDisplayed(13)
+	;Waits on second activators script setting 14
+EndIf
+
+if auiStageID == 14
+	SetObjectiveCompleted(13)
+	SetObjectiveDisplayed(14)
+	;Waits on the third activator setting 15, Talk to Leon
+EndIf
+
+if auiStageID == 15
+	SetObjectiveCompleted(14)
+	SetObjectiveDisplayed(15)
+EndIf
+
+if auiStageID == 16
+	;Ensuring that Leon gets back on the follower Package
+	Actor LeonREF = Alias_Knight.GetActorRef()
+	LeonREF.EvaluatePackage()
+	LeonREF.SetPlayerTeammate(abCanDoFavor=False)
+	LeonREF.EvaluatePackage(LeonFollowPackage)
+	SetObjectiveCompleted(11)
+	SetObjectiveCompleted(15)
+	SetObjectiveDisplayed(16)
+EndIf
+
+if auiStageID == 17
+	;Note Read NCD Added, Points to Sawbones
+	NCDMark.Placeatme(TeleXP)
+	Game.GetPlayer().Additem(pRotM_NCD,1)
+	SetObjectiveDisplayed(20)
+	pRotM103_NCDPrimer.Show()
+EndIf
+
+if auiStageID == 20
+	;Waits on Sawbones Death
+EndIf
+
+if auiStageID == 30
+SetObjectiveCompleted(20)
+SetObjectiveDisplayed(30)
+;Faction switch and aggression edit of the brothers Miller
+;Will have actors Evaluate the Parlay Ai package
+	actor SlaRef = Slash.getActorRef()
+	actor BuRef = Burn.getActorRef()		
+
+		SlaRef.AddtoFaction(PlayerFaction)
+		SlaRef.setValue(Aggression,0) 
+		BuRef.AddtoFaction(PlayerFaction)
+		BuRef.setValue(Aggression,0) 
+		BuRef.EvaluatePackage(Parlay)
+		SlaRef.EvaluatePackage(Parlay)
+EndIf
+
+if auiStageID == 38
+	SetObjectiveCompleted(30)
+	SetObjectiveDisplayed(38)
+EndIf
+
+if auiStageID == 39
+	;Set by a trigger box this begins the Confrontation scene.	
+EndIf
+
+if auiStageID == 40
+			actor SlaRef = Slash.getActorRef()
+			actor BuRef = Burn.getActorRef()
+		RotM103D1.Stop()
+	;Faction switch and aggression edit of the brothers Miller... again!
+		SlaRef.RemoveFromFaction(PlayerFaction)
+		SlaRef.setValue(Aggression,1) 
+		BuRef.RemoveFromFaction(PlayerFaction)
+		BuRef.setValue(Aggression,1) 
+	;Waits on kill counter script
+	SetObjectiveCompleted(38)
+	SetObjectiveDisplayed(40)
+EndIf
+
+if auiStageID == 41
+;blank
+EndIf
+
+if auiStageID == 42
+;blank
+EndIf
+
+if auiStageID == 43
+		Setstage(49)
+	;Stage 50 will be set by the terminal
+EndIf
+
+if auiStageID ==49
+;Stage 49 is set by 43 after both ActorRefs are dead,and then will send PC to Term
+SetObjectiveCompleted(40)
+SetObjectiveDisplayed(49)
+;Removes Leon as a team mate
+		Actor LeonREF = Alias_Knight.GetActorRef()
+		LeonREF.SetPlayerTeammate(False)
+		LeonREF.EvaluatePackage()
+EndIf
+
+if auiStageID == 50
+		;Post Fight Scene
+		;I think this stage will wait on the Scene to complete
+		SetObjectiveCompleted(49)
+		SetObjectiveDisplayed(50)
+		
+EndIf
+
+if auiStageID == 59
+	;Scene CleanUp
+	RotM103d2.Stop()
+	SetObjectiveDisplayed(50)
+	SetStage(60)
+EndIf
+
+if auiStageID == 60
+	;This Stage is set by 59
+	;Quest shut down
+	Stop()
+EndIf
+
+EndEvent
+
+Event OnQuestShutdown()
+  Debug.Trace("This quest has shut down - do any cleanup we need to do")
+	;Sets 001: The Moon Men's Stage to 30 to start 104
+		Launcher.SetStage(40)
+endEvent
