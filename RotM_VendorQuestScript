@@ -1,0 +1,65 @@
+Scriptname RotM_VendorQuestScript extends Quest Const
+
+
+;-------Definition Block--------
+;Numerical Values
+;Actors
+;Actor Values
+;Cell 
+;Faction
+;Object
+;Package
+;Quest
+;Scene
+;Special
+
+;Global Variable Properties
+GlobalVariable Property pRotM_ep1_VendorRelate Auto Const
+
+;Function Definitions
+
+
+
+;------- End Definition Block--------
+
+
+Event OnStageSet(int auiStageID, int auiItemID)
+if auiStageID == 0
+pRotM_ep1_VendorRelate.SetValue(0)
+EndIf
+
+if auiStageID == 10
+pRotM_ep1_VendorRelate.SetValue(1)
+EndIf
+
+if auiStageID == 20
+
+EndIf
+
+if auiStageID == 30
+
+EndIf
+
+
+if auiStageID == 40
+
+EndIf
+
+
+if auiStageID == 50
+
+EndIf
+
+if auiStageID == 60
+
+EndIf
+
+if auiStageID == 70
+
+EndIf
+
+if auiStageID == 80
+
+EndIf
+
+EndEvent
