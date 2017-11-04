@@ -1,0 +1,119 @@
+Scriptname RotM102QuestScript extends Quest
+
+;Actor
+ReferenceAlias Property Leon Auto Const
+ReferenceAlias Property Malachi Auto Const
+
+;Scene
+Scene Property p102ds1 Auto Const
+Scene Property p102ds2 Auto Const
+
+;Object
+ReferenceAlias Property Rock1 Auto Const
+ReferenceAlias Property Rock2 Auto Const
+ReferenceAlias Property Rock3 Auto Const
+ReferenceAlias Property Rock4 Auto Const
+ReferenceAlias Property BarrierA Auto Const
+ObjectReference Property pRotm102KLight Auto Const
+ObjectReference Property BoomMark Auto Const
+
+;Package
+Package Property DoomMarch Auto Const
+Package Property p102LGreet Auto Const
+Package Property p102LGreet2 Auto Const
+Package Property p102LMarch Auto Const
+
+;Quest
+Quest Property Launcher Auto Const
+
+;Explosion Properties
+Explosion Property boom Auto Const
+
+
+Event OnStageSet(int auiStageID, int auiItemID)
+if auiStageID == 0
+;Disables Rocks 
+Rock1.getRef().Disable()
+Rock2.getRef().Disable()
+Rock3.getRef().Disable()
+Rock4.getRef().Disable()
+EndIf
+
+if auiStageID == 10
+;Diasables the Actors and points the player to the Quest Marker 
+	actor LRef = Leon.getActorRef()
+	actor MRef = Malachi.getActorRef()
+		LRef.Disable()
+		MRef.Disable()
+		SetObjectiveDisplayed(10)
+EndIf
+
+if auiStageID == 11
+	;Enables Leon and hopefully my dialog via 102_Dialog will work
+	actor LRef = Leon.getActorRef()
+	LRef.Enable()
+		LRef.EvaluatePackage(p102LMarch)
+EndIf
+
+if auiStageID == 12
+	;Leon's ForceGreet
+	actor LRef = Leon.getActorRef()
+		LRef.EvaluatePackage(p102LGreet)
+EndIf
+
+if auiStageID == 13
+	;Enables Malachi
+
+	actor MRef = Malachi.getActorRef()
+		MRef.Enable()
+		p102ds1.Start()
+EndIf
+
+if auiStageID == 20
+;Waits on Dialog scene
+EndIf
+
+if auiStageID == 21
+	;Forces the Android to its DOOM!!!!!!!!
+		actor MRef = Malachi.getActorRef()
+			MRef.EvaluatePackage(DoomMarch)
+EndIf
+
+if auiStageID == 22
+;After the explosion, Enables the rocks and sets stage 25, prompting the (Learning Leon Dialog scene in 102_Dialog)
+	Rock1.getRef().Reset()
+	Rock2.getRef().Reset()
+	Rock3.getRef().Reset()
+	Rock4.getRef().Reset()
+
+	Rock1.getRef().EnableNoWait()
+	Rock2.getRef().EnableNoWait()
+	Rock3.getRef().EnableNoWait()
+	Rock4.getRef().EnableNoWait()
+	pRotm102KLight.DisableNoWait()
+	BoomMark.Placeatme(boom)
+	SetStage(25)
+EndIf
+
+if auiStageID == 25
+SetObjectiveDisplayed(25)
+;Leon's 2nd ForceGreet
+	actor LRef = Leon.getActorRef()
+		LRef.EvaluatePackage(p102LGreet2)
+			;p102ds2.Start()
+	;Disables the Collision Marker
+		BarrierA.getRef().DisableNoWait()
+EndIf
+
+if auiStageID == 30
+;End Quest
+Stop()
+EndIf
+
+EndEvent
+
+Event OnQuestShutdown()
+  Debug.Trace("This quest has shut down - do any cleanup we need to do")
+	;Sets 001: The Moon Men's Stage to 30 to start 103
+		Launcher.SetStage(30)
+endEvent
