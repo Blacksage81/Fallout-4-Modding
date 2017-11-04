@@ -1,0 +1,48 @@
+Scriptname RotM_NCDBase extends activemagiceffect
+
+
+;-------Definition Block--------
+
+;Potion Properties
+Potion Property beacon Auto Const
+
+
+;Message Properties
+Message Property RotM_NCDMM Auto Const
+
+
+;Global Properties
+GlobalVariable Property pRotM_NPDest Auto
+GlobalVariable Property pRotM_NCDNum Auto
+
+;Script Properties
+RotM_NCDExtender Property pRotM_Bluejay Auto 
+{Quest Script that does the heavy lifting}
+
+;-------End Definition Block--------
+
+Event OnEffectStart(Actor akTarget, Actor akCaster)
+if akTarget == Game.GetPlayer()
+ int ButtonPressed = RotM_NCDMM.Show()
+    if ButtonPressed == 0
+		pRotM_NPDest.SetValue(0)
+    elseif ButtonPressed == 1 
+		pRotM_NCDNum.SetValue(1)
+			pRotM_Bluejay.MainMenu()
+			pRotM_NCDNum.SetValue(0)
+    elseif ButtonPressed == 2
+		pRotM_NCDNum.SetValue(2)
+			pRotM_Bluejay.MainMenu()
+			pRotM_NCDNum.SetValue(0)
+    elseif ButtonPressed == 3 
+		pRotM_NCDNum.SetValue(3)
+			pRotM_Bluejay.MainMenu()
+			pRotM_NCDNum.SetValue(0)
+    elseif ButtonPressed == 4
+		pRotM_NCDNum.SetValue(4)
+			pRotM_Bluejay.MainMenu()
+			pRotM_NCDNum.SetValue(0)	
+	EndIf
+			akTarget.additem(beacon, absilent = true)
+endif
+endEvent
