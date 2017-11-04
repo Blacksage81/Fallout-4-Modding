@@ -1,0 +1,490 @@
+Scriptname RotM007QuestScript extends Quest
+{This script controls the background Quest for the VR side Quest system
+I have copied the relavent functions from the Vanilla Main Quests MQ202 and MQ203
+This Script does the following: Checks 2 global variables, one to determine the dungeon loaded, the other determines
+the enemies encountered, and the which quest is launched. In addition this script listens for input from another script to set a
+quest stage Which then runs a function and pulls the player back out into the "real world".}
+
+;-------Definition Block--------
+;Numerical Values
+;Actors
+;Actor Values
+;Cell 
+Cell Property pRotMds1 Auto Const
+Cell Property pRotMds2 Auto Const
+Cell Property pRotMds3 Auto Const
+Cell Property pRotMds4 Auto Const
+
+;Faction
+
+;Object
+ObjectReference Property p007VRLP Auto Const
+ObjectReference Property DoorDS1 Auto Const
+ObjectReference Property DoorDS2 Auto Const
+ObjectReference Property DoorDS3 Auto Const
+ObjectReference Property DoorDS4 Auto Const
+ObjectReference Property pDS1Exit Auto Const
+ObjectReference Property pDS1LP Auto Const
+ObjectReference Property pDS2Exit Auto Const
+ObjectReference Property pDS2LP Auto Const
+ObjectReference Property pDS3Exit Auto Const
+ObjectReference Property pDS3LP Auto Const
+ObjectReference Property pDS4Exit Auto Const
+ObjectReference Property pDS4LP Auto Const
+ObjectReference Property DS1ETypeMark1 Auto Const
+ObjectReference Property DS1ETypeMark2 Auto Const
+ObjectReference Property DS1ETypeMark3 Auto Const
+ObjectReference Property DS1ETypeMark4 Auto Const
+ObjectReference Property DS1ETypeMark5 Auto Const
+ObjectReference Property DS2ETypeMark1 Auto Const
+ObjectReference Property DS2ETypeMark2 Auto Const
+ObjectReference Property DS2ETypeMark3 Auto Const
+ObjectReference Property DS2ETypeMark4 Auto Const
+ObjectReference Property DS2ETypeMark5 Auto Const
+ObjectReference Property DS3ETypeMark1 Auto Const
+ObjectReference Property DS3ETypeMark2 Auto Const
+ObjectReference Property DS3ETypeMark3 Auto Const
+ObjectReference Property DS3ETypeMark4 Auto Const
+ObjectReference Property DS3ETypeMark5 Auto Const
+ObjectReference Property DS4ETypeMark1 Auto Const
+ObjectReference Property DS4ETypeMark2 Auto Const
+ObjectReference Property DS4ETypeMark3 Auto Const
+ObjectReference Property DS4ETypeMark4 Auto Const
+ObjectReference Property DS4ETypeMark5 Auto Const
+ObjectReference Property p007SimDoorMark Auto Const
+
+
+;Quest
+	Quest Property myQuest Auto Const
+	Quest Property MyQuestDS1 Auto Const
+	Quest Property MyQuestDS2 Auto Const
+	Quest Property MyQuestDS3 Auto Const
+	Quest Property MyQuestDS4 Auto Const
+
+;ReferenceAlias Properties
+	ReferenceAlias Property Alias_PlayerChair Auto Const
+	ReferenceAlias Property LoungerInstantEnter Auto Const
+
+;Global Properties
+	GlobalVariable Property pRotM_DS1ObjComp Auto Const
+	GlobalVariable Property pRotM_DS2ObjComp Auto Const
+	GlobalVariable Property pRotM_DS3ObjComp Auto Const
+	GlobalVariable Property pRotM_DS4ObjComp Auto Const
+	GlobalVariable Property pRotM007MobChoice Auto 
+	GlobalVariable Property pRotM007SimChoice Auto
+
+;Special
+	ImageSpaceModifier Property MemoryLoungerEnterImod Auto Const
+	ImageSpaceModifier Property PausedImod Auto Const
+
+InputEnableLayer EnableLayer
+	Sound Property QSTMQ203MemoryDenMemoryExit Auto Const
+	Sound Property QSTMQ203MemoryDenMemoryEnter Auto Const
+
+;Function Definitions
+
+Function ZoneIn()
+
+	SimSelector()
+
+	MobSelector()
+	EnableLayer = InputEnableLayer.Create()
+		EnableLayer.DisablePlayerControls(abMovement = false, abFighting = true, abCamSwitch = true, abLooking = false, abSneaking = true, \
+			abMenu = true, abActivate = false, abJournalTabs = true, abVATS = true, abFavorites = true)
+		;EnableLayer.EnableSprinting(false)
+	
+	MemoryLoungerEnterImod.Apply()	
+	
+	;fade game out
+	Game.FadeOutGame(abFadingOut=True, abBlackFade=False, afSecsBeforeFade=0.0, afFadeDuration=3.0, abStayFaded=True)
+	QuestSelector()
+	
+	;Call DoorSelector() here..
+	DoorSelector()
+	; Not sure on what I want to do with this.	
+	;PausedImod.apply()
+		; enable player controls completely
+	EnableLayer.Delete()
+EndFunction
+
+function MobSelector()
+;This function does stuff, being Enabling the enemies and setting the correct quest stage.
+ ;It gains its value from the Terminal and is called during the ZoneIn() Function
+
+if (pRotM007MobChoice.GetValue() == 1) ; 1 Feral Ghouls 
+			;Enables the Group of Placed Enemies: Feral Ghouls
+				if (pRotM007SimChoice.Getvalue() == 1) ; 1 Shanty Town 
+							DS1ETypeMark1.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 2); 2 Mountainous Military Mambo
+							DS2ETypeMark1.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 3) ; 3 Skyscraper Shuffle
+							DS3ETypeMark1.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 4) ; 4 Tall Tall Tower Tussle
+							DS4ETypeMark1.Enable()
+				EndIf			
+	ElseIf (pRotM007MobChoice.GetValue() == 2); 2 Raiders
+			;Enables the Group of Placed Enemies: Raiders
+				if (pRotM007SimChoice.Getvalue() == 1) ; 1 Shanty Town 
+							DS1ETypeMark2.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 2); 2 Mountainous Military Mambo
+							DS2ETypeMark2.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 3) ; 3 Skyscraper Shuffle
+							DS3ETypeMark2.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 4) ; 4 Tall Tall Tower Tussle
+							DS4ETypeMark2.Enable()
+				EndIf
+	ElseIf (pRotM007MobChoice.GetValue() == 3) ; 3 Gunners
+			;Enables the Group of Placed Enemies: Gunners
+				if (pRotM007SimChoice.Getvalue() == 1) ; 1 Shanty Town 
+							DS1ETypeMark3.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 2); 2 Mountainous Military Mambo
+							DS2ETypeMark3.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 3) ; 3 Skyscraper Shuffle
+							DS3ETypeMark3.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 4) ; 4 Tall Tall Tower Tussle
+							DS4ETypeMark3.Enable()
+				EndIf
+	ElseIf (pRotM007MobChoice.GetValue() == 4) ; 4 Super Mutants
+			;Enables the Group of Placed Enemies: Supah Mutants!
+				if (pRotM007SimChoice.Getvalue() == 1) ; 1 Shanty Town 
+							DS1ETypeMark4.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 2); 2 Mountainous Military Mambo
+							DS2ETypeMark4.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 3) ; 3 Skyscraper Shuffle
+							DS3ETypeMark4.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 4) ; 4 Tall Tall Tower Tussle
+							DS4ETypeMark4.Enable()
+				EndIf
+	ElseIf (pRotM007MobChoice.GetValue() == 5) ; 5 Synths
+			;Enables the Group of Placed Enemies: Synths
+				if (pRotM007SimChoice.Getvalue() == 1) ; 1 Shanty Town 
+							DS1ETypeMark5.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 2); 2 Mountainous Military Mambo
+							DS2ETypeMark5.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 3) ; 3 Skyscraper Shuffle
+							DS3ETypeMark5.Enable()
+					ElseIf (pRotM007SimChoice.Getvalue() == 4) ; 4 Tall Tall Tower Tussle
+							DS4ETypeMark5.Enable()
+				EndIf
+				
+EndIf
+EndFunction
+
+function SimSelector()
+ ;This function does stuff, being preloading the Dungeon Cells.
+ ;It gains its value from the Terminal and is called during the ZoneIn() Function
+
+if (pRotM007SimChoice.Getvalue() == 1) ; 1 Shanty Town 
+			;Preloads the Selected Simulation: Shanty Town Showdown
+				;forcing the preloader
+				DoorDS1.PreloadTargetArea()
+	ElseIf (pRotM007SimChoice.Getvalue() == 2); 2 Mountainous Military Mambo
+			;Preloads the Selected Simulation: Mountainous Military Mambo
+				;forcing the preloader
+				DoorDS2.PreloadTargetArea()
+	ElseIf (pRotM007SimChoice.Getvalue() == 3) ; 3 Skyscraper Shuffle
+			;Preloads the Selected Simulation: Skyscraper Shuffle
+				;forcing the preloader
+				DoorDS3.PreloadTargetArea()
+	ElseIf (pRotM007SimChoice.Getvalue() == 4) ; 4 Tall Tall Tower Tussle
+			;Preloads the Selected Simulation: Tall Tall Tower Tussle
+				;forcing the preloader
+				DoorDS4.PreloadTargetArea()
+			
+			
+EndIf
+EndFunction
+
+function DoorSelector()
+ ;It reads the Value of pRotM007SimChoice, and when called moves the player to the marker, and activates the door 
+
+if (pRotM007SimChoice.Getvalue() == 1) ; 1 Shanty Town 
+			;Handles the transition of the selected Simulation: Shanty Town Showdown
+				;play memory transition soundfx
+					QSTMQ203MemoryDenMemoryEnter.Play(Game.GetPlayer())
+	
+					;wait a few seconds, then move player
+					Utility.Wait(5.0)
+
+					Game.GetPlayer().Moveto(p007VRLP)
+					Utility.Wait(1.0)
+					DoorDS1.Activate(Game.GetPlayer())
+					
+	ElseIf (pRotM007SimChoice.Getvalue() == 2); 2 Mountainous Military Mambo
+			;Handles the transition of the selected Simulation: Mountainous Military Mambo
+				;play memory transition soundfx
+					QSTMQ203MemoryDenMemoryEnter.Play(Game.GetPlayer())
+	
+					;wait a few seconds, then move player
+					Utility.Wait(5.0)
+
+					Game.GetPlayer().Moveto(p007VRLP)
+					Utility.Wait(1.0)
+					DoorDS2.Activate(Game.GetPlayer())
+					
+	ElseIf (pRotM007SimChoice.Getvalue() == 3) ; 3 Skyscraper Shuffle
+			;Handles the transition of the selected Simulation: Shanty Town Showdown
+				;play memory transition soundfx
+					QSTMQ203MemoryDenMemoryEnter.Play(Game.GetPlayer())
+	
+					;wait a few seconds, then move player
+					Utility.Wait(5.0)
+
+					Game.GetPlayer().Moveto(p007VRLP)
+					Utility.Wait(1.0)
+					DoorDS3.Activate(Game.GetPlayer())
+					
+	ElseIf (pRotM007SimChoice.Getvalue() == 4) ; 4 Tall Tall Tower Tussle
+			;Handles the transition of the selected Simulation: Shanty Town Showdown
+				;play memory transition soundfx
+					QSTMQ203MemoryDenMemoryEnter.Play(Game.GetPlayer())
+	
+					;wait a few seconds, then move player
+					Utility.Wait(5.0)
+
+					Game.GetPlayer().Moveto(p007VRLP)
+					Utility.Wait(1.0)
+					DoorDS4.Activate(Game.GetPlayer())
+						
+EndIf
+EndFunction
+
+function QuestSelector()
+;This function does stuff, being Starting the correct quest and setting the needed stage.
+ ;It gains its value from the Terminal and is called during the ZoneIn() Function
+
+if (pRotM007SimChoice.GetValue() == 1) ; 1 Shanty Town 
+			;Starts The Quest DS1
+				MyQuestDS1.Start()
+				MyQuestDS1.SetStage(10)
+	ElseIf (pRotM007SimChoice.GetValue() == 2); 2 Military
+			;Starts The Quest DS2
+				MyQuestDS2.Start()
+				MyQuestDS2.SetStage(10)
+	
+	ElseIf (pRotM007SimChoice.GetValue() == 3) ; 3 Skyscraper
+			;Starts The Quest DS3
+				MyQuestDS3.Start()
+				MyQuestDS3.SetStage(10)
+	
+	ElseIf (pRotM007SimChoice.GetValue() == 4) ; 4 Tall Tower
+			;Starts The Quest DS4
+				MyQuestDS4.Start()
+				MyQuestDS4.SetStage(10)
+
+EndIf
+EndFunction
+
+function ExitSelector()
+;This function does stuff, being Checks the value of pRotM007SimChoice, to select the proper door.
+ ;When Activating the TV and the end of each simulation it calls stage 30 
+  ;Which activates ZoneOut() which calls this function with in it.
+
+if (pRotM007SimChoice.GetValue() == 1) ; 1 Shanty Town 
+			;Use invisible quick load door back to the PQ
+				debug.trace(self + " activate pDS1Exit")
+				pDS1Exit.Activate(Game.GetPlayer())
+				myQuest.SetStage(40)
+	
+	ElseIf (pRotM007SimChoice.GetValue() == 2); 2 Military
+			;Use invisible quick load door back to the PQ
+				debug.trace(self + " activate pDS2Exit")
+				pDS2Exit.Activate(Game.GetPlayer())
+				myQuest.SetStage(40)
+	
+	ElseIf (pRotM007SimChoice.GetValue() == 3) ; 3 Skyscraper
+			;Use invisible quick load door back to the PQ
+				debug.trace(self + " activate pDS3Exit")
+				pDS3Exit.Activate(Game.GetPlayer())
+				myQuest.SetStage(40)
+	
+	ElseIf (pRotM007SimChoice.GetValue() == 4) ; 4 TT
+			;Use invisible quick load door back to the PQ
+				debug.trace(self + " activate pDS1Exit")
+				pDS4Exit.Activate(Game.GetPlayer())
+				myQuest.SetStage(40)
+EndIf
+EndFunction
+
+
+
+Function ZoneOut()
+;Need to build this up to facilitate my plans for exiting the simulation.
+            EnableLayer = InputEnableLayer.Create()
+debug.trace("current layer name is" +EnableLayer)
+            EnableLayer.DisablePlayerControls(abMovement = false, abFighting = true, abCamSwitch = true, abLooking = false, abSneaking = true, \
+            abMenu = true, abActivate = false, abJournalTabs = true, abVATS = true, abFavorites = true)
+debug.trace("layer disabled")
+            EnableLayer.EnableSprinting(false)
+debug.trace("sprinting disabled")
+        MemoryLoungerEnterImod.Apply()
+debug.trace("Imod applied...?")
+   
+        ;fade game out
+            Game.FadeOutGame(abFadingOut=True, abBlackFade=False, afSecsBeforeFade=0.0, afFadeDuration=3.0, abStayFaded=True)
+ 
+    ;play memory transition sounds
+    QSTMQ203MemoryDenMemoryExit.Play(Game.GetPlayer())
+	
+	ExitSelector() ; see definition for what this does.
+    ; make sure fade is finished
+    Utility.Wait(5.0)
+		
+	;snap to furniture
+	debug.trace(self + " snap into lounger")
+	LoungerInstantEnter.GetRef().Activate(Game.GetPlayer(), True)
+	;close cover
+	LoungerInstantEnter.GetRef().PlayAnimation("g_idleSitInstant")
+
+	;wait for player to be in furniture before fading in
+	Utility.Wait(3.0)
+
+	;start fading game in
+	Game.FadeOutGame(abFadingOut=False, abBlackFade=False, afSecsBeforeFade=0.0, afFadeDuration=3.0, abStayFaded=False)
+
+	;wait for fade-in before we kick player out of furniture
+	Utility.Wait(3.0)
+
+	; make sure imods are cleaned up
+	;PausedImod.remove()
+
+	;exit furniture
+	debug.trace(self + " exit lounger")
+	LoungerInstantEnter.GetRef().Activate(Game.GetPlayer(), True)
+
+	; enable player controls completely
+	EnableLayer.Delete()
+
+	
+	EndFunction
+	
+function Resetomatic()
+;This function does stuff, being Checks the value of pRotM007SimChoice, to select the proper cell.
+ ;That cell and quest are reset. 
+  ;Called during Stage 2
+
+if (pRotM007SimChoice.GetValue() == 1) ; 1 Shanty Town 
+			;Resets Shanty Town
+				pRotMds1.Reset()
+				MyQuestDS1.Reset()
+				pRotM_DS1ObjComp.SetValue(0)
+	ElseIf (pRotM007SimChoice.GetValue() == 2); 2 Military
+			;Resets DS2
+				pRotMds2.Reset()
+				MyQuestDS2.Reset()
+				pRotM_DS2ObjComp.SetValue(0)
+	ElseIf (pRotM007SimChoice.GetValue() == 3) ; 3 Skyscraper
+			;Resets DS3
+				pRotMds3.Reset()
+				MyQuestDS3.Reset()
+				pRotM_DS3ObjComp.SetValue(0)
+	ElseIf (pRotM007SimChoice.GetValue() == 4) ; 4 TT
+			;Resets DS4
+				pRotMds4.Reset()
+				MyQuestDS4.Reset()
+				pRotM_DS4ObjComp.SetValue(0)
+EndIf
+EndFunction
+
+;------- End Definition Block--------
+
+
+Event OnStageSet(int auiStageID, int auiItemID)
+if auiStageID == 0
+;Enables the doors.
+p007SimDoorMark.Enable()
+
+;It also Resets the Globals
+		pRotM007SimChoice.SetValue(0)
+		pRotM007MobChoice.SetValue(0)
+
+;Disables the Instant activation Chair
+Objectreference InsLounger = LoungerInstantEnter.getRef()
+InsLounger.Disable()
+EndIf
+
+
+if auiStageID == 2
+;The Wating Game this stage waits patiently
+	Objectreference InsLounger = LoungerInstantEnter.getRef()
+	ObjectReference PlayerLounger = Alias_PlayerChair.getRef()
+			InsLounger.Disable()
+			PlayerLounger.Enable()
+;This stage also resets the most recent run simulation.
+		Resetomatic()
+;It also Resets the Globals
+		pRotM007SimChoice.SetValue(0)
+		pRotM007MobChoice.SetValue(0)
+EndIf
+
+
+if auiStageID == 5
+;Enables Activation of the Lounger
+	Alias_PlayerChair.GetRef().BlockActivation(True, False)
+	
+EndIf
+
+
+if auiStageID == 10
+	;player can no longer activate pod
+		Alias_PlayerChair.GetRef().BlockActivation(True, True)
+		Alias_PlayerChair.GetRef().Activate(Game.GetPlayer(), True)
+	;Prepares for Zonein	
+		SetStage(20)
+EndIf
+
+if auiStageID == 20
+;Runs the ZoneIn() Function
+		ZoneIn()
+
+EndIf
+
+if auiStageID == 30
+;int a = myQuest.GetStageID()
+;debug.trace("stage is" +a)
+;Waits on the input from the Exit TVs
+    ZoneOut()
+debug.trace("Zoneout at least started")
+        Objectreference InsLounger = LoungerInstantEnter.getRef()
+debug.trace("Inslounger is" +InsLounger)
+        ObjectReference PlayerLounger = Alias_PlayerChair.getRef()
+debug.trace("PlayerLounger is" +PlayerLounger)
+            InsLounger.Enable()
+debug.trace("enable successfully")
+            PlayerLounger.Disable()
+debug.trace("disabled successfully")
+	
+EndIf
+
+if auiStageID == 40
+;This stage is set by the setstage() inside of ExitSelector()
+	
+	SetStage(2)
+EndIf
+
+
+if auiStageID == 50
+
+EndIf
+
+if auiStageID == 60
+
+EndIf
+
+if auiStageID == 70
+
+EndIf
+
+if auiStageID == 80
+;Quest shut down
+Stop()
+EndIf
+
+EndEvent
+
+
+;---------- Preclean code area-----------------
+;I pasted code here that others shared with me so that I can clean it up and make it mine.
+;I have stolen much code from MQ202 and MQ203 and whomever worked on those quests. Thank you.
+;The efforts of Shatteredsteel, GeneralLuBu, and Ashnal have been invaulable to making this mod happen.
+;I don't posess the vocabulary to thank them enough.
