@@ -1,0 +1,129 @@
+Scriptname RotMNew104Fight extends Actor
+;Originally based on the CompanionMod:AAACombatStyle by Deathlock47#5355 at the Bethesda Modding Discord
+;Posted January 26, 2017
+{for changing the CombatStyle of a npc based on health.}
+
+;CombatStyle
+CombatStyle Property ShortRange Auto Mandatory
+CombatStyle Property LongRange Auto Mandatory
+CombatStyle Property MidRange Auto Mandatory
+
+;Actor Value Properties
+ActorValue Property Health Auto
+Float Property LowHealth Auto Mandatory
+Float Property HighHealth Auto Mandatory
+Float Property MidHealth Auto Mandatory
+
+Int Property I Auto
+Int Property J Auto
+Int Property K Auto
+Int Property index Auto
+
+Topic Property RetreatWords Auto
+
+;Spawn point Properties
+ObjectReference Property MVP1 Auto Const
+ObjectReference Property MVP2 Auto Const
+ObjectReference Property MVP3 Auto Const
+ObjectReference Property Mine1 Auto Const
+ObjectReference Property Mine2 Auto Const
+ObjectReference Property Mine3 Auto Const
+ObjectReference Property Mine4 Auto Const
+ObjectReference Property Mine5 Auto Const
+ObjectReference Property Mine6 Auto Const
+ObjectReference Property Mine7 Auto Const
+ObjectReference Property Mine8 Auto Const
+ObjectReference Property Mine9 Auto Const
+ObjectReference Property Mine10 Auto Const
+ObjectReference Property Clone1Mark Auto Const
+ObjectReference Property CLone2Mark Auto Const
+
+
+;Special Properties
+Explosion Property Smoke Auto Const
+MiscObject Property FireE Auto Const
+PROJECTILE Property Cryo Auto Const
+Quest Property pRotM104 Auto Const
+
+
+
+;Function Definitions
+
+
+
+
+function TrollSwap()
+		while (index < 1)
+		debug.trace("Keep your head down!")
+		placeatme(Smoke)
+		moveto(MVP2)
+		placeatme(Cryo)
+            index += 1
+        endWhile
+
+endFunction
+
+function KageBushin()
+	while (index < 1)		
+	debug.trace("Ninpo!")
+	placeatme(Smoke)
+	moveto(MVP3)
+	Clone2Mark.EnableNoWait()
+            index += 1
+        endWhile
+
+endFunction
+
+function MineSweeper()
+	debug.trace("Watch your step!")
+	while (index < 1)
+            placeatme(Smoke)
+		placeatme(FireE)
+		moveto(MVP1)
+		Mine1.placeatme(Cryo)
+		Mine2.placeatme(Cryo)
+		Mine3.placeatme(Cryo)
+		Mine4.placeatme(Cryo)
+		Mine5.placeatme(Cryo)
+		Mine6.placeatme(Cryo)
+		Mine7.placeatme(Cryo)
+		Mine8.placeatme(Cryo)
+		Mine9.placeatme(Cryo)
+		Mine10.placeatme(Cryo)
+		Clone1Mark.EnableNoWait()
+            index += 1
+        endWhile
+endFunction
+
+Event OnCombatStateChanged(Actor akTarget, int aeCombatState)
+    if (aeCombatState == 0)
+        UnregisterForAllEvents()
+    else ;combat state one or two
+        SetCombatStyle(LongRange)
+		MineSweeper()
+		TrollSwap()
+        RegisterForHitEvent(self)
+    endif
+EndEvent
+
+Event OnHit(ObjectReference akTarget, ObjectReference akAggressor, Form akSource, Projectile akProjectile, bool abPowerAttack, \
+  bool abSneakAttack, bool abBashAttack, bool abHitBlocked, string apMaterial)
+    If GetValuePercentage(Health) <= LowHealth
+        SetCombatStyle(ShortRange)
+        utility.wait(1)
+			KageBushin()
+		EndIf
+        RegisterForHitEvent(self)
+        If utility.randomFloat() < 0.10
+            say(RetreatWords)
+	Elseif GetValuePercentage(Health) > MidHealth
+       		 SetCombatStyle(MidRange)
+        		utility.wait(1)
+       		 RegisterForHitEvent(self)
+		
+    Elseif GetValuePercentage(Health) > HighHealth
+        SetCombatStyle(LongRange)
+        utility.wait(1)
+        RegisterForHitEvent(self)
+    endif
+EndEvent
