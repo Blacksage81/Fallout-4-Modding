@@ -1,0 +1,342 @@
+Scriptname RotM006_Trainer extends Quest
+
+
+;Numerical Values
+;Actor
+ReferenceAlias Property Falcon Auto Const
+ReferenceAlias Property Ocelot Auto Const
+ReferenceAlias Property Serval Auto Const
+ReferenceAlias Property Wolf Auto Const
+ReferenceAlias Property Lynx Auto Const
+ReferenceAlias Property Husky Auto Const
+ReferenceAlias Property Canary Auto Const
+ReferenceAlias Property Leopard Auto Const
+
+;Faction
+;Object
+ObjectReference Property pRotM006TREntMark Auto Const
+ObjectReference Property pRotM006TRDestMark Auto Const
+
+;Package
+Package Property TraineeBreakfast Auto Const
+Package Property LeaderLapsStarting Auto Const
+Package Property LeaderLaps Auto Const
+Package Property PreTraining Auto Const
+Package Property TraineeLapsStarting Auto Const
+Package Property TraineeLaps Auto Const
+Package Property TraineeLunch Auto Const
+Package Property TRFalcon Auto Const
+Package Property TRLynx Auto Const
+Package Property TROcelot Auto Const
+Package Property TRServal Auto Const
+Package Property TRCanary Auto Const
+Package Property TRWolf Auto Const
+Package Property TRLeopard Auto Const
+Package Property TRHusky Auto Const
+Package Property PostTraining Auto Const
+Package Property TraineeDinner Auto Const
+Package Property TraineeRR Auto Const
+Package Property TraineeSleep Auto Const
+;Quest
+;Scene
+;Special
+
+;Function Definitions
+Function ToTrain()
+;Local Function Props
+actor NT1 = Falcon.getActorRef()
+actor NT2 = Lynx.getActorRef()
+actor NT3 = Ocelot.getActorRef()
+actor NT4 = Serval.getActorRef()
+actor NT5 = Canary.getActorRef()
+actor NT6 = Leopard.getActorRef()
+actor NT7 = Wolf.getActorRef()
+actor NT8 = Husky.getActorRef()
+;Local Props End
+
+;Action 1 Moves the Trainees to the PreTraining XMarker Flag
+
+NT1.EvaluatePackage(PreTraining)
+NT2.EvaluatePackage(PreTraining)
+NT3.EvaluatePackage(PreTraining)
+NT4.EvaluatePackage(PreTraining)
+NT5.EvaluatePackage(PreTraining)
+NT6.EvaluatePackage(PreTraining)
+NT7.EvaluatePackage(PreTraining)
+NT8.EvaluatePackage(PreTraining)
+;Action 2 Teleports the actors to The Destination XMarker Flag
+
+NT1.moveTo(pRotM006TRDestMark)
+NT2.moveTo(pRotM006TRDestMark)
+NT3.moveTo(pRotM006TRDestMark)
+NT4.moveTo(pRotM006TRDestMark)
+NT5.moveTo(pRotM006TRDestMark)
+NT6.moveTo(pRotM006TRDestMark)
+NT7.moveTo(pRotM006TRDestMark)
+NT8.moveTo(pRotM006TRDestMark)
+;Action 3 Has the Actors move to thier starting locations, also XMarker Flags
+
+NT1.EvaluatePackage(LeaderLapsStarting)
+NT2.EvaluatePackage(TraineeLapsStarting)
+NT3.EvaluatePackage(TraineeLapsStarting)
+NT4.EvaluatePackage(TraineeLapsStarting)
+NT5.EvaluatePackage(TraineeLapsStarting)
+NT6.EvaluatePackage(TraineeLapsStarting)
+NT7.EvaluatePackage(TraineeLapsStarting)
+NT8.EvaluatePackage(TraineeLapsStarting)
+EndFunction
+
+Function FromTrain()
+;Local Function Props
+actor NT1 = Falcon.getActorRef()
+actor NT2 = Lynx.getActorRef()
+actor NT3 = Ocelot.getActorRef()
+actor NT4 = Serval.getActorRef()
+actor NT5 = Canary.getActorRef()
+actor NT6 = Leopard.getActorRef()
+actor NT7 = Wolf.getActorRef()
+actor NT8 = Husky.getActorRef()
+;Local Props End
+
+;Action 1 Moves the actors to the Destination XMarker Flag
+
+NT1.EvaluatePackage(PostTraining)
+NT2.EvaluatePackage(PostTraining)
+NT3.EvaluatePackage(PostTraining)
+NT4.EvaluatePackage(PostTraining)
+NT5.EvaluatePackage(PostTraining)
+NT6.EvaluatePackage(PostTraining)
+NT7.EvaluatePackage(PostTraining)
+NT8.EvaluatePackage(PostTraining)
+
+;Action 2 Teleports actors to the Entrance XMarker Flag
+NT1.moveTo(pRotM006TREntMark)
+NT2.moveTo(pRotM006TREntMark)
+NT3.moveTo(pRotM006TREntMark)
+NT4.moveTo(pRotM006TREntMark)
+NT5.moveTo(pRotM006TREntMark)
+NT6.moveTo(pRotM006TREntMark)
+NT7.moveTo(pRotM006TREntMark)
+NT8.moveTo(pRotM006TREntMark)
+EndFunction
+
+Function Breakfast()
+;Local Function Props
+actor NT1 = Falcon.getActorRef()
+actor NT2 = Lynx.getActorRef()
+actor NT3 = Ocelot.getActorRef()
+actor NT4 = Serval.getActorRef()
+actor NT5 = Canary.getActorRef()
+actor NT6 = Leopard.getActorRef()
+actor NT7 = Wolf.getActorRef()
+actor NT8 = Husky.getActorRef()
+;Local Props End
+
+NT1.EvaluatePackage(TraineeBreakfast)
+NT2.EvaluatePackage(TraineeBreakfast)
+NT3.EvaluatePackage(TraineeBreakfast)
+NT4.EvaluatePackage(TraineeBreakfast)
+NT5.EvaluatePackage(TraineeBreakfast)
+NT6.EvaluatePackage(TraineeBreakfast)
+NT7.EvaluatePackage(TraineeBreakfast)
+NT8.EvaluatePackage(TraineeBreakfast)
+
+End Function
+
+Function Laps()
+;Local Function Props
+actor NT1 = Falcon.getActorRef()
+actor NT2 = Lynx.getActorRef()
+actor NT3 = Ocelot.getActorRef()
+actor NT4 = Serval.getActorRef()
+actor NT5 = Canary.getActorRef()
+actor NT6 = Leopard.getActorRef()
+actor NT7 = Wolf.getActorRef()
+actor NT8 = Husky.getActorRef()
+;Local Props End
+
+NT1.EvaluatePackage(LeaderLaps)
+NT2.EvaluatePackage(TraineeLaps)
+NT3.EvaluatePackage(TraineeLaps)
+NT4.EvaluatePackage(TraineeLaps)
+NT5.EvaluatePackage(TraineeLaps)
+NT6.EvaluatePackage(TraineeLaps)
+NT7.EvaluatePackage(TraineeLaps)
+NT8.EvaluatePackage(TraineeLaps)
+EndFunction
+
+Function Lunch()
+;Local Function Props
+actor NT1 = Falcon.getActorRef()
+actor NT2 = Lynx.getActorRef()
+actor NT3 = Ocelot.getActorRef()
+actor NT4 = Serval.getActorRef()
+actor NT5 = Canary.getActorRef()
+actor NT6 = Leopard.getActorRef()
+actor NT7 = Wolf.getActorRef()
+actor NT8 = Husky.getActorRef()
+;Local Props End
+
+NT1.EvaluatePackage(TraineeLunch)
+NT2.EvaluatePackage(TraineeLunch)
+NT3.EvaluatePackage(TraineeLunch)
+NT4.EvaluatePackage(TraineeLunch)
+NT5.EvaluatePackage(TraineeLunch)
+NT6.EvaluatePackage(TraineeLunch)
+NT7.EvaluatePackage(TraineeLunch)
+NT8.EvaluatePackage(TraineeLunch)
+EndFunction
+
+Function GunRange()
+;Local Function Props
+actor NT1 = Falcon.getActorRef()
+actor NT2 = Lynx.getActorRef()
+actor NT3 = Ocelot.getActorRef()
+actor NT4 = Serval.getActorRef()
+actor NT5 = Canary.getActorRef()
+actor NT6 = Leopard.getActorRef()
+actor NT7 = Wolf.getActorRef()
+actor NT8 = Husky.getActorRef()
+;Local Props End
+
+NT1.EvaluatePackage(TRFalcon)
+NT2.EvaluatePackage(TRLynx)
+NT3.EvaluatePackage(TROcelot)
+NT4.EvaluatePackage(TRServal)
+NT5.EvaluatePackage(TRCanary)
+NT6.EvaluatePackage(TRLeopard)
+NT7.EvaluatePackage(TRWolf)
+NT8.EvaluatePackage(TRHusky)
+EndFunction
+
+Function Dinner()
+;Local Function Props
+actor NT1 = Falcon.getActorRef()
+actor NT2 = Lynx.getActorRef()
+actor NT3 = Ocelot.getActorRef()
+actor NT4 = Serval.getActorRef()
+actor NT5 = Canary.getActorRef()
+actor NT6 = Leopard.getActorRef()
+actor NT7 = Wolf.getActorRef()
+actor NT8 = Husky.getActorRef()
+;Local Props End
+
+NT1.EvaluatePackage(TraineeDinner)
+NT2.EvaluatePackage(TraineeDinner)
+NT3.EvaluatePackage(TraineeDinner)
+NT4.EvaluatePackage(TraineeDinner)
+NT5.EvaluatePackage(TraineeDinner)
+NT6.EvaluatePackage(TraineeDinner)
+NT7.EvaluatePackage(TraineeDinner)
+NT8.EvaluatePackage(TraineeDinner)
+EndFunction
+
+
+Function RandR()
+;Local Function Props
+actor NT1 = Falcon.getActorRef()
+actor NT2 = Lynx.getActorRef()
+actor NT3 = Ocelot.getActorRef()
+actor NT4 = Serval.getActorRef()
+actor NT5 = Canary.getActorRef()
+actor NT6 = Leopard.getActorRef()
+actor NT7 = Wolf.getActorRef()
+actor NT8 = Husky.getActorRef()
+;Local Props End
+
+NT1.EvaluatePackage(TraineeRR)
+NT2.EvaluatePackage(TraineeRR)
+NT3.EvaluatePackage(TraineeRR)
+NT4.EvaluatePackage(TraineeRR)
+NT5.EvaluatePackage(TraineeRR)
+NT6.EvaluatePackage(TraineeRR)
+NT7.EvaluatePackage(TraineeRR)
+NT8.EvaluatePackage(TraineeRR)
+EndFunction
+
+Function Sleep()
+;Local Function Props
+actor NT1 = Falcon.getActorRef()
+actor NT2 = Lynx.getActorRef()
+actor NT3 = Ocelot.getActorRef()
+actor NT4 = Serval.getActorRef()
+actor NT5 = Canary.getActorRef()
+actor NT6 = Leopard.getActorRef()
+actor NT7 = Wolf.getActorRef()
+actor NT8 = Husky.getActorRef()
+;Local Props End
+
+NT1.EvaluatePackage(TraineeSleep)
+NT2.EvaluatePackage(TraineeSleep)
+NT3.EvaluatePackage(TraineeSleep)
+NT4.EvaluatePackage(TraineeSleep)
+NT5.EvaluatePackage(TraineeSleep)
+NT6.EvaluatePackage(TraineeSleep)
+NT7.EvaluatePackage(TraineeSleep)
+NT8.EvaluatePackage(TraineeSleep)
+EndFunction
+
+
+Event OnStageSet(int auiStageID, int auiItemID)
+if auiStageID == 0
+;Waits silently in the darkness
+EndIf
+
+if auiStageID == 10
+;This stage should be set By 001:Launcher
+;This Stage handles the Training of the Recruits
+;I encased everything in functions to make the Stage if statement much easier to read.
+Breakfast()
+ToTrain()
+Laps()
+Lunch()
+GunRange()
+FromTrain()
+Dinner()
+RandR()
+Sleep()
+
+EndIf
+
+if auiStageID == 20
+
+EndIf
+
+if auiStageID == 30
+
+EndIf
+
+if auiStageID == 31
+
+EndIf
+
+
+if auiStageID == 40
+
+EndIf
+
+
+if auiStageID == 50
+
+EndIf
+
+if auiStageID == 60
+
+EndIf
+
+if auiStageID == 70
+
+EndIf
+
+if auiStageID == 80
+;Quest shut down
+Stop()
+EndIf
+
+EndEvent
+
+;Event OnQuestShutdown()
+  ;Debug.Trace("This quest has shut down - do any cleanup we need to do")
+	;Sets 001: The Moon Men's Stage to 30 to start 104
+		;Launcher.SetStage(40)
+;endEvent
