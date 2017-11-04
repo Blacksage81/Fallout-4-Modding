@@ -1,0 +1,120 @@
+Scriptname NervePort extends activemagiceffect
+
+;-------Definition Block--------
+;Numerical Values
+;Actors
+;Actor Values
+;Cell 
+;Actor Properties
+;Reference Alias Properties
+
+;Object Properties
+ObjectReference Property IntLP Auto Const
+ObjectReference Property NELoLP Auto Const
+ObjectReference Property GoodNeborLP Auto Const
+ObjectReference Property BunkHilLP Auto Const
+ObjectReference Property DCityLP Auto Const
+ObjectReference Property TransLP Auto Const
+
+;Potion Properties
+Potion Property beacon Auto Const
+
+;Explosion Properties
+Explosion Property TeleXP Auto Const
+Explosion Property Smoke Auto Const
+
+;Faction Properties
+Faction Property CurrentCompanionFaction Auto Const
+
+;Message Properties
+Message Property RotM_NPMenu Auto
+
+;Quest Properties
+;Scene Properties
+
+;Global Properties
+GlobalVariable Property pRotM_NPDest Auto
+
+;-------End Definition Block--------
+
+;---Function Block--------
+
+
+Function NervePort()
+		;Local Function Props
+			actor Player = Game.GetPlayer()
+			
+		if (pRotM_NPDest.GetValue() == 1) ; 1 PQ 
+			;Transits to: 
+				Player.placeatme(TeleXP)
+				Player.moveto(IntLP)
+				IntLP.placeatme(TeleXP)
+				
+	ElseIf (pRotM_NPDest.GetValue() == 2); 2 Nerve Ending Lobby
+			;Transits to: 
+				Player.placeatme(TeleXP)
+				Player.moveto(NELoLP)
+				NELoLP.placeatme(TeleXP)
+	
+	ElseIf (pRotM_NPDest.GetValue() == 3) ; 3 Transit Station
+			;Transits to: 
+				Player.placeatme(TeleXP)
+				Player.moveto(TransLP)
+				TransLP.placeatme(TeleXP)
+	
+	ElseIf (pRotM_NPDest.GetValue() == 4) ; 4 DCity
+			;Transits to: 
+				Player.placeatme(TeleXP)
+				Player.moveto(DCityLP)
+				DCityLP.placeatme(TeleXP)
+
+	ElseIf (pRotM_NPDest.GetValue() == 5) ; 5 Goodneighbor
+			;Transits to: 
+				Player.placeatme(TeleXP)
+				Player.moveto(GoodNeborLP)
+				GoodNeborLP.placeatme(TeleXP)
+
+	ElseIf (pRotM_NPDest.GetValue() == 6) ; 4 Bunker Hill
+			;Transits to: 
+				Player.placeatme(TeleXP)
+				Player.moveto(BunkHilLP)
+				BunkHilLP.placeatme(TeleXP)				
+	EndIf
+		
+EndFunction
+
+;----------End Function Block--------
+
+Event OnEffectStart(Actor akTarget, Actor akCaster)
+if akTarget == Game.GetPlayer()
+ int ButtonPressed = RotM_NPMenu.Show()
+    if ButtonPressed == 0
+		pRotM_NPDest.SetValue(0)
+    elseif ButtonPressed == 1 
+		pRotM_NPDest.SetValue(1)
+			NervePort()
+			pRotM_NPDest.SetValue(0)
+    elseif ButtonPressed == 2
+		pRotM_NPDest.SetValue(2)
+			NervePort()
+			pRotM_NPDest.SetValue(0)
+    elseif ButtonPressed == 3 
+		pRotM_NPDest.SetValue(3)
+			NervePort()
+			pRotM_NPDest.SetValue(0)
+    elseif ButtonPressed == 4
+		pRotM_NPDest.SetValue(4)
+			NervePort()
+			pRotM_NPDest.SetValue(0)
+	elseif ButtonPressed == 5
+		pRotM_NPDest.SetValue(5)
+			NervePort()
+			pRotM_NPDest.SetValue(0)
+	elseif ButtonPressed == 6
+		pRotM_NPDest.SetValue(6)
+			NervePort()
+			pRotM_NPDest.SetValue(0)	
+	EndIf
+			akTarget.additem(beacon, absilent = true)
+endif
+endEvent
