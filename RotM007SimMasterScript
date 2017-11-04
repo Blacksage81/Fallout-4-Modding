@@ -1,0 +1,114 @@
+Scriptname RotM007SimMasterScript extends Terminal
+
+;-------Definition Block--------
+;Numerical Values
+;Actors
+;Actor Values
+;Cell 
+;Global Properties
+GlobalVariable Property pRotM007SimChoice Auto
+GlobalVariable Property pRotM007MobChoice Auto
+
+;Faction
+;Object
+ObjectReference Property Ds1Mark Auto Const
+ObjectReference Property Ds2Mark Auto Const
+ObjectReference Property Ds3Mark Auto Const
+ObjectReference Property Ds4Mark Auto Const
+;Package
+;Quest
+Quest Property pRotMDSim1 Auto Const
+Quest Property pRotMDSim2 Auto Const
+Quest Property pRotMDSim3 Auto Const
+Quest Property pRotMDSim4 Auto Const
+;ReferenceAlias Properties
+;Scene
+;Special
+Explosion Property TeleFX Auto Const
+;Function Definitions
+
+Function SimReturn()
+	float s = pRotM007SimChoice.GetValue()
+	float m = pRotM007MobChoice.GetValue()
+
+	if (s == 1 && m >1 ) ; 1 Shanty Town 
+				if pRotMDSim1.getStage() > 10
+					;Returns to Shanty Town
+					actor Player = Game.GetPlayer()
+					Player.PlaceatMe(TeleFX)
+					Player.Moveto(Ds1Mark)
+					Ds1Mark.PlaceatMe(TeleFX)
+				Else
+				
+				endif	
+				
+	ElseIf (s == 2 && m >1 ); 2 Military
+			if pRotMDSim2.getStage() > 10
+					;Returns to Military Mambo
+					actor Player = Game.GetPlayer()
+					Player.PlaceatMe(TeleFX)
+					Player.Moveto(Ds2Mark)
+					Ds2Mark.PlaceatMe(TeleFX)
+			Else
+				
+				endif
+	ElseIf (s == 3 && m >1 ) ; 3 Skyscraper
+			if pRotMDSim3.getStage() > 10
+					;Returns to Skyscraper Scramble
+					actor Player = Game.GetPlayer()
+					Player.PlaceatMe(TeleFX)
+					Player.Moveto(Ds3Mark)
+					Ds3Mark.PlaceatMe(TeleFX)
+			Else
+				
+				endif	
+	ElseIf (s == 4 && m >1 ) ; 4 TT
+			if pRotMDSim4.getStage() > 10
+					;Returns to Tall Tall Tower
+					actor Player = Game.GetPlayer()
+					Player.PlaceatMe(TeleFX)
+					Player.Moveto(Ds4Mark)
+					Ds4Mark.PlaceatMe(TeleFX)
+			Else
+				
+				endif	
+EndIf
+EndFunction
+
+
+
+
+;End Function Block--------
+;End Definition Block--------
+
+Event OnMenuItemRun(int ID, ObjectReference akTerminalRef)
+
+
+If ID == 1 ; Sets SimChoice Global to 1
+		pRotm007SimChoice.SetValue(1)
+	EndIf
+If ID == 2 ; Sets SimChoice Global to 2
+		pRotm007SimChoice.SetValue(2)
+	EndIf
+If ID == 3 ; Sets SimChoice Global to 3
+		pRotm007SimChoice.SetValue(3)
+	EndIf
+If ID == 4 ; Sets SimChoice Global to 4
+		pRotm007SimChoice.SetValue(4)
+	EndIf
+;If ID == 5
+	;
+	;EndIf
+	
+;If ID == 6
+	;	Retun the player to the current simulation
+		SimReturn()
+	;EndIf
+;If ID == 7
+	;
+	;EndIf
+;If ID == 8
+	;
+	;EndIf
+
+EndEvent
