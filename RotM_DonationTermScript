@@ -1,0 +1,133 @@
+Scriptname RotM_DonationTermScript extends Terminal
+
+
+MiscObject Property pCaps001 Auto Const
+
+GlobalVariable Property pRotM_NerveBudget Auto
+GlobalVariable Property pRotM_RewardTier Auto
+
+;Message
+Message Property pRotM_RewardTierMess Auto Const
+
+;Quest
+Quest Property pRotM000 Auto Const
+
+;Object
+ObjectReference Property T5Emarker Auto Const
+
+Float Property T5Val Auto Const
+{100k caps}
+Float Property T4Val Auto Const
+{75k caps}
+Float Property T3Val Auto Const
+{50k caps}
+Float Property T2Val Auto Const
+{25k caps}
+Float Property T1Val Auto Const
+{10k caps}
+
+Function TierChecker()
+
+;Local Function Props
+		float i = pRotM_NerveBudget.GetValue()
+		float j = pRotM_RewardTier.GetValue()
+	if i >= T5Val 
+		;Tier 5: 
+			if j < 5
+					pRotM_RewardTier.SetValue(5)
+					pRotM000.UpdateCurrentInstanceGlobal(pRotM_RewardTier)
+					T5Emarker.Enable()
+			EndIf
+	ElseIf i >= T4Val
+			;Tier 4: 
+			if j < 4
+					pRotM_RewardTier.SetValue(4)
+					pRotM000.UpdateCurrentInstanceGlobal(pRotM_RewardTier)
+			EndIf	
+	ElseIf i >= T3Val
+			;Tier 3: 
+			if j < 3
+					pRotM_RewardTier.SetValue(3)
+					pRotM000.UpdateCurrentInstanceGlobal(pRotM_RewardTier)
+			EndIf
+	ElseIf i >= T2Val
+			;Tier 2: 
+			if j < 2
+					pRotM_RewardTier.SetValue(2)
+					pRotM000.UpdateCurrentInstanceGlobal(pRotM_RewardTier)
+			EndIf
+	ElseIf i >= T1Val
+			;Tier 1: 
+			if j < 1
+					pRotM_RewardTier.SetValue(1)
+					pRotM000.UpdateCurrentInstanceGlobal(pRotM_RewardTier)
+			EndIf
+			
+	ElseIf i < T1Val
+			;Less than Tier 1: 
+
+			EndIf		
+EndFunction
+
+
+
+Event OnMenuItemRun(int ID, ObjectReference akTerminalRef)
+actor player = Game.getPlayer()
+
+If ID == 1 ; Does a thing when the Player chooses an option.
+		;The thing that is done.
+			;10000 caps
+				if player.GetItemCount(pCaps001) >= 10000
+					player.RemoveItem(pCaps001, 10000)
+					pRotM_NerveBudget.Mod(10000)
+					pRotM000.UpdateCurrentInstanceGlobal(pRotM_NerveBudget)
+					TierChecker()
+					pRotM_RewardTierMess.Show()
+				endif	
+	EndIf
+If ID == 2 ; Does a thing when the Player chooses an option.
+		;The thing that is done.
+			;5000 caps
+				if player.GetItemCount(pCaps001) >= 5000
+					player.RemoveItem(pCaps001, 5000)
+					pRotM_NerveBudget.Mod(5000)
+					pRotM000.UpdateCurrentInstanceGlobal(pRotM_NerveBudget)
+					TierChecker()
+					pRotM_RewardTierMess.Show()
+				endif	
+	EndIf
+If ID == 3 ; Does a thing when the Player chooses an option.
+		;The thing that is done.
+			;1000 caps
+				if player.GetItemCount(pCaps001) >= 1000
+					player.RemoveItem(pCaps001, 1000)
+					pRotM_NerveBudget.Mod(1000)
+					pRotM000.UpdateCurrentInstanceGlobal(pRotM_NerveBudget)
+					TierChecker()
+					pRotM_RewardTierMess.Show()
+				endif	
+	EndIf
+If ID == 4 ; Does a thing when the Player chooses an option.
+		;The thing that is done.
+			;500 caps
+				if player.GetItemCount(pCaps001) >= 500
+					player.RemoveItem(pCaps001, 500)
+					pRotM_NerveBudget.Mod(500)
+					pRotM000.UpdateCurrentInstanceGlobal(pRotM_NerveBudget)
+					TierChecker()
+					pRotM_RewardTierMess.Show()
+				endif	
+	EndIf
+If ID == 5 ; Does a thing when the Player chooses an option.
+		;The thing that is done.
+			;200 caps
+					if player.GetItemCount(pCaps001) >= 200
+					player.RemoveItem(pCaps001, 200)
+					pRotM_NerveBudget.Mod(200)
+					pRotM000.UpdateCurrentInstanceGlobal(pRotM_NerveBudget)
+					TierChecker()
+					pRotM_RewardTierMess.Show()
+				endif
+	EndIf	
+
+EndEvent
