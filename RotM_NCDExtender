@@ -1,0 +1,562 @@
+Scriptname RotM_NCDExtender extends Quest
+{Contains all of the funtions accessed by the NCD}
+
+
+;-------Definition Block--------
+
+;Reference Alias Properties
+ReferenceAlias Property pCompCait Auto Const
+{Quest: ComCait}
+ReferenceAlias Property pCompCurie Auto Const
+{Quest: ComCurie}
+ReferenceAlias Property pCompDog Auto Const
+{Quest: DogmeatQuest}
+ReferenceAlias Property pCompMacC Auto Const
+{Quest: ComMaccready}
+ReferenceAlias Property pCompPres Auto Const
+{Quest: ComPreston}
+ReferenceAlias Property pCompDanse Auto Const
+{Quest: ComDanse}
+ReferenceAlias Property pCompCod Auto Const
+{Quest: ComCodsworth}
+ReferenceAlias Property pCompStrong Auto Const
+{Quest: ComStrong}
+ReferenceAlias Property pCompHanc Auto Const
+{Quest: ComHancock}
+ReferenceAlias Property pCompNick Auto Const
+{Quest: ComNick}
+ReferenceAlias Property pCompX6 Auto Const
+{Quest: ComX6}
+ReferenceAlias Property pCompPiper Auto Const
+{Quest: ComPiper}
+ReferenceAlias Property pCompDeac Auto Const
+{Quest: ComDeacon}
+ReferenceAlias Property pCompLeonS Auto Const
+{Quest: RotM_CA_Leon}
+ReferenceAlias Property pCompMala Auto Const
+{Quest: RotM_CA_Malachi}
+ReferenceAlias Property pCompMissy Auto Const
+{Quest: RotM_CA_Missy}
+ReferenceAlias Property pAlias_Chest Auto Const
+
+
+;Spell Properties
+Spell Property ChestSpell Auto Const
+
+;Object Properties
+ObjectReference Property IntLP Auto Const
+{Nerve Ending 1: PQ}
+ObjectReference Property NELoLP Auto Const
+{Nerve Ending 1: Lobby}
+ObjectReference Property GoodNeborLP Auto Const
+{COCMarkerHeading in: GoodneighborExt}
+ObjectReference Property BunkHilLP Auto Const
+{COCMarkerHeading in: BunkerHillExt03}
+ObjectReference Property DCityLP Auto Const
+{COCMarkerHeading in: DiamondCityExt}
+ObjectReference Property TransLP Auto Const
+{Nerve Ending 1: Axon Line}
+ObjectReference Property ChestHome Auto Const
+{Xmarker under the Floor in the PQ}
+
+;Potion Properties
+Potion Property beacon Auto Const
+
+;Explosion Properties
+Explosion Property TeleXP Auto Const
+Explosion Property Smoke Auto Const
+
+
+;Faction Properties
+Faction Property CurrentCompanionFaction Auto Const
+
+;Message Properties
+Message Property RotM_NCDMM Auto Const
+Message Property RotM_NPMenu Auto Const
+Message Property RotM_Contact1 Auto Const
+Message Property RotM_Contact2 Auto Const
+Message Property RotM_Contact3 Auto Const
+Message Property FailMsg Auto Const
+
+;Quest Properties
+Quest Property pMin00 Auto Const
+Quest Property pInstKickout Auto Const
+Quest Property pInst303 Auto Const
+Quest Property pRotM105 Auto Const
+Quest Property pMS16 Auto Const
+Quest Property pFFGood06 Auto Const
+Quest Property pFFGood07 Auto Const
+Quest Property pComCurieQ Auto Const
+Quest Property pBos201 Auto Const
+Quest Property pRR102 Auto Const
+Quest Property pFFDCity07 Auto Const
+Quest Property pCZ Auto Const
+Quest Property pMQ105 Auto Const
+Quest Property pMS10b Auto Const
+Quest Property pDCPW Auto Const
+{Quest: DialogCodsworthPostWar}
+Quest Property pDogQ Auto Const
+{Quest: DogmeatQuest}
+
+
+;Global Properties
+GlobalVariable Property pRotM_NPDest Auto
+GlobalVariable Property pRotM_NCDNum Auto
+GlobalVariable Property pRotM_conVal Auto
+GlobalVariable Property pRotM_conPG Auto
+GlobalVariable Property pRotM_mesPG Auto
+GlobalVariable Property pRotM_mesSel Auto
+
+
+;-------End Definition Block--------
+
+
+
+;---Function Block--------
+
+Function MessControl()
+actor player = Game.GetPlayer()					
+		
+		if (pRotM_mesSel.GetValue() == 1) ; 1 Meet at Nerve Ending
+			;First Reply
+				pRotM106.SetStage(2)
+				
+		ElseIf (pRotM_mesSel.GetValue() == 2) ; 2 Meet at safehouse
+			;Second Reply
+				pRotM106.SetStage(3)
+				
+		EndIf
+
+EndFunction
+
+Function ChestSummon()
+actor player = Game.GetPlayer()
+objectreference Chest = pAlias_Chest.GetReference()					
+	player.placeatme(TeleXP)
+	Chest.MoveTo(player)	
+EndFunction
+
+Function ChestDismiss()
+actor player = Game.GetPlayer()
+objectreference Chest = pAlias_Chest.GetReference()
+		Chest.placeatme(TeleXP)
+		Chest.MoveTo(ChestHome)
+EndFunction
+
+Function TChest()
+	actor player = Game.GetPlayer()
+	ChestSpell.cast(player, akTarget = None)
+
+EndFunction
+
+Function ConControl()
+	actor player = Game.GetPlayer()
+	int ButtonPressed = RotM_Contact1.Show()
+			if ButtonPressed == 0
+				pRotM_conVal.SetValue(0)
+			elseif ButtonPressed == 1 
+				pRotM_conVal.SetValue(1)
+				RotM_PAF()
+				pRotM_conVal.SetValue(0)
+			elseif ButtonPressed == 2
+				pRotM_conVal.SetValue(2)
+				RotM_PAF()
+				pRotM_conVal.SetValue(0)
+			elseif ButtonPressed == 3 
+				pRotM_conVal.SetValue(3)
+				RotM_PAF()
+				pRotM_conVal.SetValue(0)
+			elseif ButtonPressed == 4
+				pRotM_conVal.SetValue(4)
+				RotM_PAF()
+				pRotM_conVal.SetValue(0)
+			elseif ButtonPressed == 5
+				pRotM_conVal.SetValue(5)
+				RotM_PAF()
+				pRotM_conVal.SetValue(0)
+			elseif ButtonPressed == 6
+				pRotM_conVal.SetValue(6)
+				RotM_PAF()
+				pRotM_conVal.SetValue(0)
+
+			elseif ButtonPressed == 7
+				pRotM_conVal.SetValue(7)
+				pRotM_conPG.SetValue(1)
+				ConControl2()
+				pRotM_conVal.SetValue(0)
+		
+			EndIf
+	
+EndFunction
+
+Function RotM_PAF()
+
+;Local Function Props
+			actor Player = Game.GetPlayer()
+			actor Dog = pCompDog.getActorRef()
+			actor Cod = pCompCod.getActorRef()
+			actor Pres = pCompPres.getActorRef()
+			actor Piper = pCompPiper.getActorRef()
+			actor Cait = pCompCait.getActorRef()
+			actor Nick = pCompNick.getActorRef()
+			
+	if (pRotM_conVal.GetValue() == 0) ; 0 Main Menu
+			;Shows the Main Menu
+				MainMenu()
+				pRotM_conVal.SetValue(0)
+		
+	Elseif (pRotM_conVal.GetValue() == 1)
+			If (pDogQ.GetStageDone(1) == 1)
+					;Transits Comp to the Player: Dogmeat 
+					Player.placeatme(TeleXP)
+					Dog.MoveTo(player)
+				Else
+						FailMsg.Show()
+				EndIf
+
+	ElseIf (pRotM_conVal.GetValue() == 2); 2 cods
+				If (pDCPW.GetStageDone(250) == 1)
+					;Transits Comp to the Player: cods
+					Player.placeatme(TeleXP)
+					Cod.MoveTo(player)
+				Else
+						FailMsg.Show()
+				EndIf
+	ElseIf (pRotM_conVal.GetValue() == 3) ; 3 Preston
+			
+			if pMin00.IsCompleted()
+				;Transits Comp to the Player: 
+				Player.placeatme(TeleXP)
+				Pres.MoveTo(player)
+			else
+				FailMsg.Show()
+		EndIf
+	
+	ElseIf (pRotM_conVal.GetValue() == 4) ; 4 Piper
+			if pFFDCity07.IsCompleted()
+				;Transits Comp to the Player: 
+				Player.placeatme(TeleXP)
+				Piper.MoveTo(player)
+			else
+				FailMsg.Show()
+		EndIf
+	ElseIf (pRotM_conVal.GetValue() == 5)
+			If (pCZ.GetStageDone(500) == 1)
+				;Transits Comp to the Player: Cait
+				Player.placeatme(TeleXP)
+				Cait.MoveTo(player)
+				Else
+						FailMsg.Show()
+				EndIf
+	ElseIf (pRotM_conVal.GetValue() == 6)
+			if pMQ105.IsCompleted()
+				;Transits Comp to the Player: Nick
+				Player.placeatme(TeleXP)
+				Nick.MoveTo(player)
+				Else
+						FailMsg.Show()
+				EndIf
+	ElseIf (pRotM_conVal.GetValue() == 7) ; Next Page
+			;Next Page: 
+				pRotM_conVal.SetValue(0)
+				ConControl2()
+	EndIf
+EndFunction
+
+Function ConControl2()
+	actor player = Game.GetPlayer()
+	int ButtonPressed = RotM_Contact2.Show()
+			if ButtonPressed == 0
+				pRotM_conVal.SetValue(0)
+			
+			elseif ButtonPressed == 1 
+				pRotM_conVal.SetValue(1)
+				RotM_PAF2()
+				
+			elseif ButtonPressed == 2
+				pRotM_conVal.SetValue(2)
+				RotM_PAF2()
+				
+			elseif ButtonPressed == 3 
+				pRotM_conVal.SetValue(3)
+				RotM_PAF2()
+				
+			elseif ButtonPressed == 4
+				pRotM_conVal.SetValue(4)
+				RotM_PAF2()
+				
+			elseif ButtonPressed == 5
+				pRotM_conVal.SetValue(5)
+				RotM_PAF2()
+				
+			elseif ButtonPressed == 6
+				pRotM_conVal.SetValue(6)
+				RotM_PAF2()
+				
+			elseif ButtonPressed == 7
+				pRotM_conVal.SetValue(7)
+				RotM_PAF2()	
+			
+			elseif ButtonPressed == 7
+				pRotM_conVal.SetValue(7)
+				pRotM_conPG.SetValue(2)
+				ConControl3()						
+			EndIf
+EndFunction
+
+Function RotM_PAF2()
+
+;Local Function Props
+			actor Player = Game.GetPlayer()
+			actor MacC = pCompMacC.getActorRef()
+			actor Hanc = pCompHanc.getActorRef()
+			actor Curie = pCompCurie.getActorRef()
+			actor Danse = pCompDanse.getActorRef()
+			actor Deac = pCompDeac.getActorRef()
+			actor X6 = pCompX6.getActorRef()
+		
+	if (pRotM_conVal.GetValue() == 0 && pRotM_conPG.GetValue() == 1) ; 0 Main Menu
+			;Shows the Main Menu
+				MainMenu()
+				pRotM_conVal.SetValue(0)		
+	Elseif (pRotM_conVal.GetValue() == 1 && pRotM_conPG.GetValue() == 1) ; Previous Page 
+	
+				ConControl()
+				
+	ElseIf (pRotM_conVal.GetValue() == 2 && pRotM_conPG.GetValue() == 1); 2 MacCready
+			if pFFGood06.IsCompleted()
+				;Transits Comp to the Player: 
+				Player.placeatme(TeleXP)
+				MacC.MoveTo(player)
+			else
+				FailMsg.Show()
+			endif
+	ElseIf (pRotM_conVal.GetValue() == 3 && pRotM_conPG.GetValue() == 1)
+			if pFFGood07.IsCompleted() && pMS16.IsCompleted()
+				;Transits Comp to the Player: Hancock
+				Player.placeatme(TeleXP)
+				Hanc.MoveTo(player)
+			else
+				FailMsg.Show()
+			endif	
+	ElseIf (pRotM_conVal.GetValue() == 4 && pRotM_conPG.GetValue() == 1) 
+			if pComCurieQ.IsCompleted()
+				;Transits Comp to the Player: Curie
+				Player.placeatme(TeleXP)
+				Curie.MoveTo(player)
+			else
+				FailMsg.Show()
+			endif		
+	ElseIf (pRotM_conVal.GetValue() == 5 && pRotM_conPG.GetValue() == 1)
+			if pBos201.IsCompleted()
+				;Transits Comp to the Player: Danse
+				Player.placeatme(TeleXP)
+				Danse.MoveTo(player)
+			else
+				FailMsg.Show()
+			endif
+	ElseIf (pRotM_conVal.GetValue() == 6 && pRotM_conPG.GetValue() == 1) 
+			if pRR102.isCompleted()	
+				;Transits Comp to the Player: ; 6 Deacon
+				Player.placeatme(TeleXP)
+				Deac.MoveTo(player)
+			else
+				FailMsg.Show()
+			endif	
+	ElseIf (pRotM_conVal.GetValue() == 7 && pRotM_conPG.GetValue() == 1) 			
+			if pInst303.IsCompleted() && pInstKickout.IsCompleted()		
+				FailMsg.Show()
+			elseif pInst303.IsCompleted()
+				;Transits Comp to the Player: X6-88
+				Player.placeatme(TeleXP)
+				X6.MoveTo(player)
+			Else
+				FailMsg.Show()
+			EndIf
+
+	ElseIf (pRotM_conVal.GetValue() == 8 && pRotM_conPG.GetValue() == 1) ; Next Page
+			;Next Page: 
+				pRotM_conVal.SetValue(0)
+				pRotM_conPG.SetValue(3)
+				ConControl3()
+	EndIf
+EndFunction
+
+Function ConControl3()
+	actor player = Game.GetPlayer()
+	int ButtonPressed = RotM_Contact2.Show()
+			if ButtonPressed == 0
+				pRotM_conVal.SetValue(0)
+			elseif ButtonPressed == 1 
+				pRotM_conVal.SetValue(1)
+				ConControl2()
+				pRotM_conVal.SetValue(0)
+			elseif ButtonPressed == 2
+				pRotM_conVal.SetValue(2)
+				RotM_PAF3()
+				pRotM_conVal.SetValue(0)
+			elseif ButtonPressed == 3 
+				pRotM_conVal.SetValue(3)
+				RotM_PAF3()
+				pRotM_conVal.SetValue(0)
+			elseif ButtonPressed == 4
+				pRotM_conVal.SetValue(4)
+				RotM_PAF3()
+				pRotM_conVal.SetValue(0)
+			elseif ButtonPressed == 5
+				pRotM_conVal.SetValue(5)
+				RotM_PAF3()
+				pRotM_conVal.SetValue(0)	
+			EndIf
+EndFunction
+
+
+
+Function RotM_PAF3()
+
+;Local Function Props
+			actor Player = Game.GetPlayer()
+			actor Strong = pCompStrong.getActorRef()
+			actor LeonS = pCompLeonS.getActorRef()
+			actor Mala = pCompMala.getActorRef()
+			actor Missy = pCompMissy.getActorRef()
+			
+	if (pRotM_conVal.GetValue() == 2 && pRotM_conPG.GetValue() == 3)
+			if pMS10b.IsCompleted()
+			;Transits Comp to the Player: Strong
+				Player.placeatme(TeleXP)
+				Strong.MoveTo(player)
+			else	
+				FailMsg.show()
+			EndIf
+	Elseif (pRotM_conVal.GetValue() == 3 && pRotM_conPG.GetValue() == 3) 
+			if pRotM105.IsCompleted()		
+			;Transits Comp to the Player: Leon Seyhak
+				Player.placeatme(TeleXP)
+				LeonS.MoveTo(player)
+			else	
+				FailMsg.show()
+			EndIf			
+	ElseIf (pRotM_conVal.GetValue() == 4 && pRotM_conPG.GetValue() == 3)
+			if pRotM105.isCompleted()
+				;Transits Comp to the Player: Malachi Frost
+				Player.placeatme(TeleXP)
+				Mala.MoveTo(player)
+			else
+				FailMsg.Show()
+			endif
+	ElseIf (pRotM_conVal.GetValue() == 5 && pRotM_conPG.GetValue() == 3)
+			if pRotM105.isCompleted()	
+				;Transits Comp to the Player: Ms Mystery
+				Player.placeatme(TeleXP)
+				Missy.MoveTo(player)
+			else
+				FailMsg.Show()
+			endif
+	EndIf
+EndFunction
+
+
+Function NPControl()
+	actor player = Game.GetPlayer()					
+		int ButtonPressed = RotM_NPMenu.Show()
+			if ButtonPressed == 0
+				pRotM_NPDest.SetValue(0)
+			elseif ButtonPressed == 1 
+				pRotM_NPDest.SetValue(1)
+				NervePort()
+				pRotM_NPDest.SetValue(0)
+			elseif ButtonPressed == 2
+				pRotM_NPDest.SetValue(2)
+				NervePort()
+				pRotM_NPDest.SetValue(0)
+			elseif ButtonPressed == 3 
+				pRotM_NPDest.SetValue(3)
+				NervePort()
+				pRotM_NPDest.SetValue(0)
+			elseif ButtonPressed == 4
+				pRotM_NPDest.SetValue(4)
+				NervePort()
+				pRotM_NPDest.SetValue(0)
+			elseif ButtonPressed == 5
+				pRotM_NPDest.SetValue(5)
+				NervePort()
+				pRotM_NPDest.SetValue(0)
+			elseif ButtonPressed == 6
+				pRotM_NPDest.SetValue(6)
+				NervePort()
+				pRotM_NPDest.SetValue(0)	
+			EndIf		
+EndFunction
+
+Function MainMenu()
+		;Local Function Props
+			actor Player = Game.GetPlayer()
+	if (pRotM_NCDNum.GetValue() == 0) ; 0 Cancel 
+			;Opens the messages menu
+				pRotM_NCDNum.SetValue(0)	
+		
+	Elseif (pRotM_NCDNum.GetValue() == 1) ; 1 Messages 
+			;Opens the messages menu
+				MessControl()
+	ElseIf (pRotM_NCDNum.GetValue() == 2); 2 Contacts
+			;Opens the Contacts Menu
+				ConControl()
+	ElseIf (pRotM_NCDNum.GetValue() == 3) ; 3 NerviPort
+			;Opens the NerviPortMenu
+				NPControl()
+	ElseIf (pRotM_NCDNum.GetValue() == 4) ; 4 Directors field chest
+			;Places the exlosion which spawns the chest 
+				TChest()
+				
+	EndIf
+		
+EndFunction
+
+
+
+
+Function NervePort()
+		;Local Function Props
+			actor Player = Game.GetPlayer()
+			
+		if (pRotM_NPDest.GetValue() == 1) ; 1 PQ 
+			;Transits to: 
+				Player.placeatme(TeleXP)
+				Player.moveto(IntLP)
+				IntLP.placeatme(TeleXP)
+				
+	ElseIf (pRotM_NPDest.GetValue() == 2); 2 Nerve Ending Lobby
+			;Transits to: 
+				Player.placeatme(TeleXP)
+				Player.moveto(NELoLP)
+				NELoLP.placeatme(TeleXP)
+	
+	ElseIf (pRotM_NPDest.GetValue() == 3) ; 3 Transit Station
+			;Transits to: 
+				Player.placeatme(TeleXP)
+				Player.moveto(TransLP)
+				TransLP.placeatme(TeleXP)
+	
+	ElseIf (pRotM_NPDest.GetValue() == 4) ; 4 DCity
+			;Transits to: 
+				Player.placeatme(TeleXP)
+				Player.moveto(DCityLP)
+				DCityLP.placeatme(TeleXP)
+
+	ElseIf (pRotM_NPDest.GetValue() == 5) ; 5 Goodneighbor
+			;Transits to: 
+				Player.placeatme(TeleXP)
+				Player.moveto(GoodNeborLP)
+				GoodNeborLP.placeatme(TeleXP)
+
+	ElseIf (pRotM_NPDest.GetValue() == 6) ; 4 Bunker Hill
+			;Transits to: 
+				Player.placeatme(TeleXP)
+				Player.moveto(BunkHilLP)
+				BunkHilLP.placeatme(TeleXP)				
+	EndIf
+		
+EndFunction
+
+;----------End Function Block--------
