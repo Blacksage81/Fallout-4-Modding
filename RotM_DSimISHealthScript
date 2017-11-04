@@ -1,0 +1,86 @@
+Scriptname RotM_DSimISHealthScript extends Terminal
+
+;-------Definition Block--------
+	;Numerical Values
+		Float Property S1Value Auto Const
+		{100 points}
+		Float Property S5Value Auto Const
+		{350 points}
+		Float Property R1Value Auto Const
+		{100 points}
+		Float Property R5Value Auto Const
+		{350 points}
+		Float Property M1Value Auto Const
+		{100 points}
+		Float Property M5Value Auto Const
+		{350 points}
+	;Global Properties
+		GlobalVariable Property pRotM_SimPointVal Auto
+	;Potion Properties
+		Potion Property pRotM_Bluebomber Auto Const
+		Potion Property pStimpak Auto Const
+		Potion Property pMedX Auto Const
+		Potion Property pRadAway Auto Const
+	;Quest Properties
+		Quest Property pRotM000 Auto Const
+;Function Definitions
+
+
+
+
+
+;End Function Block--------
+;End Definition Block--------
+
+Event OnMenuItemRun(int ID, ObjectReference akTerminalRef)
+
+
+If ID == 1 ; Does a thing when the Player chooses an option.
+		if pRotM_SimPointVal.GetValue() >= S1Value
+			pRotM_SimPointVal.Mod(S1Value * -1)
+				Game.GetPlayer().AddItem(pStimpak)
+				pRotM000.UpdateCurrentInstanceGlobal(pRotM_SimPointVal)
+				Utility.Wait(1)
+		EndIf
+	EndIf
+If ID == 2 ; Does a thing when the Player chooses an option.
+		if pRotM_SimPointVal.GetValue() >= S5Value
+			pRotM_SimPointVal.Mod(S5Value * -1)
+				Game.GetPlayer().AddItem(pStimpak, 5)
+				pRotM000.UpdateCurrentInstanceGlobal(pRotM_SimPointVal)
+				Utility.Wait(1)
+		EndIf
+	EndIf
+If ID == 3 ; Does a thing when the Player chooses an option.
+		if pRotM_SimPointVal.GetValue() >= R1Value
+			pRotM_SimPointVal.Mod(R1Value * -1)
+				Game.GetPlayer().AddItem(pRadAway)
+				pRotM000.UpdateCurrentInstanceGlobal(pRotM_SimPointVal)
+				Utility.Wait(1)
+		EndIf
+	EndIf
+If ID == 4 ; Does a thing when the Player chooses an option.
+		if pRotM_SimPointVal.GetValue() >= R5Value
+			pRotM_SimPointVal.Mod(R5Value * -1)
+				Game.GetPlayer().AddItem(pRadAway, 5)
+				pRotM000.UpdateCurrentInstanceGlobal(pRotM_SimPointVal)
+				Utility.Wait(1)
+		EndIf
+	EndIf
+If ID == 5 ; Does a thing when the Player chooses an option.
+		if pRotM_SimPointVal.GetValue() >= M1Value
+			pRotM_SimPointVal.Mod(M1Value * -1)
+				Game.GetPlayer().AddItem(pMedX)
+				pRotM000.UpdateCurrentInstanceGlobal(pRotM_SimPointVal)
+				Utility.Wait(1)
+		EndIf
+	EndIf	
+If ID == 6 ; Does a thing when the Player chooses an option.
+		if pRotM_SimPointVal.GetValue() >= M5Value
+			pRotM_SimPointVal.Mod(M5Value * -1)
+				Game.GetPlayer().AddItem(pMedX, 5)
+				pRotM000.UpdateCurrentInstanceGlobal(pRotM_SimPointVal)
+				Utility.Wait(1)
+		EndIf
+	EndIf
+EndEvent
