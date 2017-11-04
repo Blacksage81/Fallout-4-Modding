@@ -1,0 +1,32 @@
+Scriptname RotM103_Gumshoe extends ObjectReference
+;-------Definition Block--------
+;Numerical Values
+Int Property SNum Auto
+;Actors
+;Actor Values
+;Cell 
+;Faction
+;Object
+;Package
+;Quest
+Quest Property myQuest Auto Const
+;Scene
+;Special
+Message Property Messprop Auto Const
+GlobalVariable Property DCGlobal Auto
+
+;Function Definitions
+
+
+
+;------- End Definition Block--------
+
+
+
+Event OnActivate(ObjectReference akActionRef)
+   if akActionRef == Game.GetPlayer()
+      Messprop.show()
+	  MyQuest.setStage(SNum)
+	  float newValue = DCGlobal.Mod(1)
+   endif
+EndEvent
