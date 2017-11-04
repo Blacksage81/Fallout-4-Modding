@@ -1,0 +1,271 @@
+Scriptname RotM107QuestScript extends Quest
+{This is the Quest script for RotM107: Surveying the Synapse}
+
+
+
+;-------Definition Block--------
+;Numerical Values
+;Actors
+
+;Faction Properties
+	Faction Property CurrentCompanionFaction Auto Const
+InputEnableLayer EnableLayer
+
+;Object
+	ObjectReference Property NeExitMark Auto Const
+	ObjectReference Property SyExitMark Auto Const
+	ObjectReference Property NE1Door Auto Const
+	ObjectReference Property SynapseDoor Auto Const
+	ObjectReference Property pB1LightOn Auto Const
+	ObjectReference Property pB1LightOff Auto Const
+	ObjectReference Property pB2LightOn Auto Const
+	ObjectReference Property pB2LightOff Auto Const
+	ObjectReference Property pB3LightOn Auto Const	
+	ObjectReference Property pB3LightOff Auto Const
+	ObjectReference Property TerminalOnEMark Auto Const
+	ObjectReference Property TerminalOffEMark Auto Const
+	ObjectReference Property DamageOnEMark Auto Const
+	ObjectReference Property DamageOffEMark Auto Const
+	ObjectReference Property pS120XMark Auto Const
+	ObjectReference Property pS120MMark Auto Const
+	ObjectReference Property pS120LMark Auto Const
+
+	
+;Package Properties
+	Package Property pRotM107_LeonHoldPack Auto Const
+	Package Property pRotM107_Mala22TravelPack Auto Const
+	Package Property pRotM107_MalaFollowerPack Auto Const
+	Package Property pRotM107_VendorHoldPack Auto Const
+	
+;Reference Alias
+		ReferenceAlias Property Leon Auto Const
+		ReferenceAlias Property Malachi Auto Const
+		ReferenceAlias Property Wombat Auto Const
+		ReferenceAlias Property Vendor Auto Const
+;Quest
+	Quest Property Launcher Auto Const
+;Scene
+	Scene Property p107Stage10 Auto Const
+	Scene Property p107Stage22 Auto Const
+	Scene Property p107Stage60 Auto Const
+	Scene Property p107Stage100 Auto Const
+	Scene Property p107Stage120 Auto Const
+;Special
+	Sound Property OBJTrainMoveLPM Auto const
+
+	;Function Definitions
+
+Function ZoneIn()
+
+	EnableLayer = InputEnableLayer.Create()
+		EnableLayer.DisablePlayerControls(abMovement = false, abFighting = true, abCamSwitch = true, abLooking = false, abSneaking = true, \
+			abMenu = true, abActivate = false, abJournalTabs = true, abVATS = true, abFavorites = true)
+		;EnableLayer.EnableSprinting(false)
+	
+	;fade game out
+	Game.FadeOutGame(abFadingOut=True, abBlackFade=False, afSecsBeforeFade=0.0, afFadeDuration=3.0, abStayFaded=True)
+	;play transition soundfx
+		;Need Train Sound
+					OBJTrainMoveLPM.Play(Game.GetPlayer())
+	
+	;The part the moves the Player	
+		;wait a few seconds, then move player
+					Utility.Wait(2.0)
+					Game.GetPlayer().Moveto(NeExitMark)
+					Utility.Wait(1.0)
+					NE1Door.Activate(Game.GetPlayer())
+	;PausedImod.apply()
+		; enable player controls completely
+	EnableLayer.Delete()
+EndFunction
+
+Function ZoneOut()
+
+	EnableLayer = InputEnableLayer.Create()
+		EnableLayer.DisablePlayerControls(abMovement = false, abFighting = true, abCamSwitch = true, abLooking = false, abSneaking = true, \
+			abMenu = true, abActivate = false, abJournalTabs = true, abVATS = true, abFavorites = true)
+		;EnableLayer.EnableSprinting(false)
+	
+	;fade game out
+	Game.FadeOutGame(abFadingOut=True, abBlackFade=False, afSecsBeforeFade=0.0, afFadeDuration=3.0, abStayFaded=True)
+	;play transition soundfx
+		;Need Train Sound
+					OBJTrainMoveLPM.Play(Game.GetPlayer())
+	
+	;The part the moves the Player	
+		;wait a few seconds, then move player
+					Utility.Wait(2.0)
+					Game.GetPlayer().Moveto(SyExitMark)
+					Utility.Wait(1.0)
+					SynapseDoor.Activate(Game.GetPlayer())
+	;PausedImod.apply()
+		; enable player controls completely
+	EnableLayer.Delete()
+EndFunction
+
+;------- End Definition Block--------
+
+
+Event OnStageSet(int auiStageID, int auiItemID)
+if auiStageID == 0
+;Enable/Disable phase, set during a dialog scene, propmted by completion of 106
+		pB1LightOn.Disable() 
+ 		pB1LightOff.Enable()
+		pB2LightOn.Disable() 
+ 		pB2LightOff.Enable()
+		pB3LightOn.Disable() 
+ 		pB3LightOff.Enable()
+  		TerminalOnEMark.Disable() 		
+		TerminalOffEMark.Enable()		
+		DamageOnEMark.Disable() 		
+		DamageOffEMark.Enable()
+SetStage(10)
+EndIf
+
+if auiStageID == 10
+;Talk to Malachi at Nerve Ending 1 (also a Quest OBJ)
+	;Dialog scene for stage 10 will set stage 20
+
+EndIf
+
+
+if auiStageID == 20
+;Take the Axon Monorail to Synapse 1 (also a Quest OBJ)
+	SetObjectiveCompleted(1)
+	SetObjectiveDisplayed(10)
+EndIf
+
+if auiStageID == 22
+;Transition stage 
+	ZoneIn()
+		SetObjectiveCompleted(10)
+		Utility.Wait(10)
+		p107Stage22.Start()
+EndIf
+
+if auiStageID == 30
+;Investigate the area with Malachi (also a Quest OBJ)
+	SetObjectiveDisplayed(20)
+
+EndIf
+
+if auiStageID == 31
+;Access the Synapse Teminal (also a Quest OBJ)
+SetObjectiveDisplayed(30)
+SetObjectiveCompleted(20)
+EndIf
+
+
+if auiStageID == 40
+;Make your way to Level B2
+	SetObjectiveCompleted(30)
+	SetObjectiveDisplayed(40)
+	Actor Boss = Wombat.GetActorRef()
+	Boss.Enable()
+EndIf
+
+
+if auiStageID == 50
+;Locate the Facilities access hatch (also a Quest OBJ)
+;Reactor Term requires a key from Wombat
+	SetObjectiveCompleted(40)
+EndIf
+
+if auiStageID == 55
+;Lay Wombat to Rest
+	;stage 60 set by script on Wombat Alias
+	SetObjectiveDisplayed(50)
+EndIf
+
+if auiStageID == 60
+;Restart the Reactor (also a Quest OBJ)
+	p107Stage60.Start()
+	SetObjectiveCompleted(50)
+	SetObjectiveDisplayed(60)
+	;enables stuff. Terminal frag...
+
+EndIf
+
+
+if auiStageID == 70
+;Locate and Access the control room (also a Quest OBJ)
+	SetObjectiveCompleted(60)
+	SetObjectiveDisplayed(70)
+EndIf
+
+if auiStageID == 80
+;Locate and Activate the Mainframe
+
+
+EndIf
+
+if auiStageID == 90
+;Check Tunnel Status (also a Quest OBJ)
+	SetObjectiveCompleted(70)
+	SetObjectiveDisplayed(80)
+	SetStage(100)
+EndIf
+
+if auiStageID == 100
+;Talk to Malachi (also a Quest OBJ)
+	SetObjectiveCompleted(80)
+	SetObjectiveDisplayed(90)
+
+EndIf
+
+if auiStageID == 110
+;Return to Nerve Ending 1 (also a Quest OBJ)
+		SetObjectiveDisplayed(100)
+		DamageOnEMark.Enable() 		
+		DamageOffEMark.Disable()
+EndIf
+
+if auiStageID == 115
+;Transition Stage from Synapse
+	ZoneOut()
+	;Local Properties
+			Actor LREF = Leon.GetActorRef()
+			Actor VREF = Vendor.GetActorRef()
+			
+	;Failsafe if Leon is a current Companion
+		;Lifted and converted with Care from MQ106 Stage 1100
+
+			If LREF.IsInFaction(CurrentCompanionFaction) == True
+				LREF.DisallowCompanion(SuppressDismissMessage = False)
+			EndIf
+
+		LRef.moveto(pS120LMark)
+		LREF.EvaluatePackage(pRotM107_LeonHoldPack)
+		
+		VRef.moveto(pS120XMark)
+		VREF.EvaluatePackage(pRotM107_VendorHoldPack)	
+	Utility.Wait(5)
+		SetStage(120)
+	
+EndIf
+
+if auiStageID == 120
+;Talk to Xavier (also a Quest OBJ)
+	SetObjectiveCompleted(100)
+	SetObjectiveDisplayed(110)
+
+EndIf
+
+if auiStageID == 130
+;Adds the Cast as Followers
+	;Local Properties
+			Actor LREF = Leon.GetActorRef()
+			Actor MalaREF = Malachi.GetActorRef()
+		LREF.AllowCompanion(MakeCompanionIfNoneCurrently = false, ForceCompanion = false)
+		MalaREF.SetAvailableToBeCompanion()
+;Quest shut down
+Stop()
+EndIf
+
+EndEvent
+
+Event OnQuestShutdown()
+  Debug.Trace("This quest has shut down - do any cleanup we need to do")
+	;Sets 001: The Moon Men's Stage to 80 to Finish the Quest chain	
+		Launcher.SetStage(80)
+endEvent
