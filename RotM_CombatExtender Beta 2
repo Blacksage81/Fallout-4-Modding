@@ -1,0 +1,322 @@
+Scriptname RotM_CombatExtender extends Quest 
+{This Script contains all of the Functions that do all of the heavy lifting of the combat system
+;Cooldowns: Time, Globals contain a converted Gametime float, which the cooldown### float(s) then check against
+;0.4= 8 hours GT  0.1 = 1 hour GT 0.005 = 30m GT 0.0025= 15mins GT before ability can be used again
+;Cooldown Table
+;Knights: SMA:.1 SRA:.1 EN:.4 HE:N/A SH:N/A BR:N/A CO:.1 BU:.1
+;Slayers: SMA:.05 SRA:.05 EN:.02 HE:N/A SH:.01 BR:N/A CO:.05 BU:.4
+;Shadows: SMA:.1 SRA:.1 EN:.4 HE:.1 SH:N/A BR:.005 CO:.1 BU:.1
+;Proc Chances
+;Utility.GetRandomFloat() looks for a float between 0 and 1, percentages need to be decimals.
+;ie 10% is 0.1, while 1% is 0.01
+;Knights: SMA:.05 SRA:.03 EN:.001 HE:N/A SH:N/A BR:N/A CO:.03 BU:.01
+;Slayers: SMA:.05 SRA:.03 EN:.01 HE:N/A SH:.01 BR:N/A CO:.01 BU:.05
+;Shadows: SMA:.01 SRA:.05 EN:.001 HE:.03 SH:N/A BR:.05 CO:.01 BU:.07}
+
+;Properties
+
+ReferenceAlias Property myUserRef Auto Const
+{Needs to point to the Reference Alias that contains the Actor using these skills}
+
+;Scene Properties
+
+	Scene Property mySceneBuff Auto Const
+	{This should point to a Scene that Contains the Dialog the Actors will say}
+	Scene Property mySceneBuff2 Auto Const
+	{This should point to a Scene that Contains the Dialog the Actors will say}
+	Scene Property mySceneCon Auto Const
+	{This should point to a Scene that Contains the Dialog the Actors will say}
+	Scene Property mySceneEnrage Auto Const
+	{This should point to a Scene that Contains the Dialog the Actors will say}
+	Scene Property mySceneBDR Auto Const
+	{This should point to a Scene that Contains the Dialog the Actors will say}
+	Scene Property mySceneSMA Auto Const
+	{This should point to a Scene that Contains the Dialog the Actors will say}
+	Scene Property mySceneSRA Auto Const
+	{This should point to a Scene that Contains the Dialog the Actors will say}
+	Scene Property mySceneHeal Auto Const
+	{This should point to a Scene that Contains the Dialog the Actors will say}
+	Scene Property mySceneSHeal Auto Const
+	{This should point to a Scene that Contains the Dialog the Actors will say}
+
+;Package Properties
+Package Property myPackM Auto Const
+Package Property myPackR Auto Const
+Package Property myPackH Auto Const
+
+;Cooldowns: Time
+Float Property cooldownBuff Auto
+{Knights:.1 Slayers:.4 Shadows:.1}
+Float Property cooldownCon Auto
+{Knights:.1 Slayers:.05 Shadows:.1}
+Float Property cooldownEnrage Auto
+{Knights:.4 Slayers:.02 Shadows:.4}
+Float Property cooldownBDR Auto
+{Knights:N/A Slayers:N/A Shadows:.005}
+Float Property cooldownSMA Auto
+{Knights:.1 Slayers:.05 Shadows:.1}
+Float Property cooldownSRA Auto
+{Knights:.1 Slayers:.05 Shadows:.1}
+Float Property cooldownHeal Auto
+{Knights:N/A Slayers:N/A Shadows:.1}
+Float Property cooldownSHeal Auto
+{Knights:N/A Slayers:.01 Shadows:N/A}
+
+
+;Global Variables
+GlobalVariable Property myBuCD1 Auto Const
+{Cooldown for: Buff Spells}
+GlobalVariable Property myBuCD2 Auto Const
+{Cooldown for: Buff Spells}
+GlobalVariable Property myBrCD Auto Const
+{Cooldown for: Body Replacement Spells} 
+GlobalVariable Property myCoCD Auto Const
+{Cooldown for: Conjure Spells}
+GlobalVariable Property myEnCD Auto Const
+{Cooldown for: Enrage Spells}
+GlobalVariable Property myShCD Auto Const
+{Cooldown for: Self Healing Spell}
+GlobalVariable Property myHeCD Auto Const
+{Cooldown for: Healing Spells}
+GlobalVariable Property myMaCD Auto Const
+{Cooldown for: Special Melee Attack Spells}
+GlobalVariable Property myRaCD Auto Const
+{Cooldown for: Special Ranged Attack Spells}
+
+;Spell Times
+Int Property BuSTime1 Auto Const
+{Spell time for Buff Spells, 30}
+Int Property BuSTime2 Auto Const
+{Spell time for Buff Spells, 30}
+Int Property CoSTime Auto Const
+{Spell time for Conjure Spells, Instant, 3}
+Int Property BrSTime Auto Const
+{Spell time for Body Replacement Spells, Instant, 3} 
+Int Property EnSTime Auto Const
+{Spell time for Enrage Spells, 30}
+Int Property ShSTime Auto Const
+{Spell time for Self Healing Spell, Instant, 3}
+Int Property HeSTime Auto Const
+{Spell time for Healing Spells, Instant, 3}
+Int Property MaSTime Auto Const
+{Spell time for Special Melee Attack Spells, Instant, 3}
+Int Property RaSTime Auto Const
+{Spell time for Special Ranged Attack Spells, Instant, 3}
+
+;Proc Chances
+Float Property ProcChanceSM Auto Const
+{Knights:.05 Slayers:.05 Shadows:.01}
+Float Property ProcChanceSR Auto Const
+{Knights:.03 Slayers:.03 Shadows:.05}
+Float Property ProcChanceER Auto Const
+{Knights:.001 Slayers:.1 Shadows:.001}
+Float Property ProcChanceBR Auto Const
+{Knights:N/A Slayers:N/A Shadows:.05}
+Float Property ProcChanceBU Auto Const
+{Knights:.01 Slayers:.05 Shadows:.07}
+Float Property ProcChanceCO Auto Const
+{Knights:.03 Slayers:.01 Shadows:.01}
+Float Property ProcChanceHE Auto Const
+{Knights:N/A Slayers:N/A Shadows:.03}
+Float Property ProcChanceSH Auto Const
+{Knights:N/A Slayers:.01 Shadows:N/A}
+
+
+;Spell Properties
+Spell Property Buffspell1 Auto Const
+Spell Property Buffspell2 Auto Const
+Spell Property EnrageSpell Auto Const
+Spell Property BReplaceSpell Auto Const
+Spell Property SelfHealSpell Auto Const
+Spell Property HealSpell1 Auto Const
+Spell Property SMASpell Auto Const
+Spell Property altSMASpell Auto Const
+Spell Property SRASpell Auto Const
+
+
+;Weapon & Grenade Properties
+Weapon Property cItem Auto Const
+
+;Function Definition Block
+
+Function Buff1()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.GetCurrentGameTime() > myBuCD1.GetValue()
+		myBuCD1.SetValue(Utility.GetCurrentGameTime() + cooldownBuff)
+		BuffSpell1.cast(MyREF, akTarget = None)
+			mySceneBuff.Start()
+	endIf
+EndFunction
+
+Function ProcBuff1()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.RandomFloat() <= ProcChanceBU
+		myBuCD1.SetValue(Utility.GetCurrentGameTime() + cooldownBuff)
+		BuffSpell1.cast(MyREF, akTarget = None)
+			mySceneBuff.Start()
+	endIf
+EndFunction
+
+Function Buff2()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.GetCurrentGameTime() > myBuCD2.GetValue()
+		myBuCD2.SetValue(Utility.GetCurrentGameTime() + cooldownBuff)
+		BuffSpell2.cast(MyREF, akTarget = None)
+			mySceneBuff2.Start()
+	endIf
+EndFunction
+
+Function ProcBuff2()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.RandomFloat() <= ProcChanceBU
+		myBuCD2.SetValue(Utility.GetCurrentGameTime() + cooldownBuff)
+		BuffSpell2.cast(MyREF, akTarget = None)
+			mySceneBuff2.Start()
+	endIf
+EndFunction
+
+Function Heal1()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.GetCurrentGameTime() > myHeCD.GetValue()
+		myHeCD.SetValue(Utility.GetCurrentGameTime() + cooldownHeal)
+		HealSpell1.cast(MyREF, akTarget = None)
+			mySceneHeal.Start()
+	endIf
+EndFunction
+
+Function ProcHeal()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.RandomFloat() <= ProcChanceHE
+		MyREF.EvaluatePackage(myPackH)
+			mySceneHeal.Start()
+	endIf
+EndFunction
+
+Function SelfHeal()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.GetCurrentGameTime() > myShCD.GetValue()
+		myShCD.SetValue(Utility.GetCurrentGameTime() + cooldownSHeal)
+		SelfHealSpell.cast(MyREF, akTarget = None)
+			mySceneSHeal.Start()
+	endIf
+EndFunction
+
+Function ProcSHeal()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.RandomFloat() <= ProcChanceSH
+		SelfHealSpell.cast(MyREF, akTarget = None)
+			mySceneSHeal.Start()
+	endIf
+EndFunction
+
+Function Enrage()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.GetCurrentGameTime() > myEnCD.GetValue()
+		myEnCD.SetValue(Utility.GetCurrentGameTime() + cooldownEnrage)
+		EnrageSpell.cast(MyREF, akTarget = None)
+			mySceneEnrage.Start()
+	endIf
+EndFunction
+
+Function ProcRage()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.RandomFloat() <= ProcChanceER
+		myEnCD.SetValue(Utility.GetCurrentGameTime() + cooldownEnrage)
+		EnrageSpell.cast(MyREF, akTarget = None)
+			mySceneEnrage.Start()
+	endIf
+EndFunction
+
+Function BRep()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.GetCurrentGameTime() > myBrCD.GetValue()
+		myBrCD.SetValue(Utility.GetCurrentGameTime() + cooldownBDR)
+		BReplaceSpell.cast(MyREF, akTarget = None)
+			mySceneBDR.Start()
+	endIf
+EndFunction
+
+Function ProcBR()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.RandomFloat() <= ProcChanceBR
+		myBrCD.SetValue(Utility.GetCurrentGameTime() + cooldownBDR)
+		BReplaceSpell.cast(MyREF, akTarget = None)
+			mySceneBDR.Start()
+	endIf
+EndFunction
+
+Function SMAttack()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.GetCurrentGameTime() > myMaCD.GetValue()
+		myMaCD.SetValue(Utility.GetCurrentGameTime() + cooldownSMA)
+		SMASpell.cast(MyREF, akTarget = None)
+			mySceneSMA.Start()
+	endIf
+EndFunction
+
+Function ProcSM()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.RandomFloat() <= ProcChanceSM
+		SMASpell.cast(MyREF, akTarget = None)
+			mySceneSMA.Start()
+	endIf
+EndFunction
+
+Function altSMAttack() ;For Actors who don't use Assassinate remove alt from beginning of Function if they only have one SMASpell
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.GetCurrentGameTime() > myMaCD.GetValue()
+		myMaCD.SetValue(Utility.GetCurrentGameTime() + cooldownSMA)
+		altSMASpell.cast(MyREF, akTarget = None)
+		MyREF.EvaluatePackage(myPackM)
+			mySceneSMA.Start()
+	endIf
+EndFunction
+
+Function altProcSM() ;For non-shadows who proc special Melee remove alt in your script
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.RandomFloat() <= ProcChanceSM
+		SMASpell.cast(MyREF, akTarget = None)
+		MyREF.EvaluatePackage(myPackM)
+			mySceneSMA.Start()
+	endIf
+EndFunction
+
+Function SRAttack()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.GetCurrentGameTime() > myRaCD.GetValue()
+		myRaCD.SetValue(Utility.GetCurrentGameTime() + cooldownSRA)
+		SRASpell.cast(MyREF, akTarget = None)
+		MyREF.EvaluatePackage(myPackR)
+			mySceneSRA.Start()
+	endIf
+EndFunction
+
+Function ProcSR() ;For anyone who can proc a special Ranged attack
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.RandomFloat() <= ProcChanceSR
+		SRASpell.cast(MyREF, akTarget = None)
+		MyREF.EvaluatePackage(myPackR)
+			mySceneSRA.Start()
+	endIf
+EndFunction
+
+Function Conjure()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.GetCurrentGameTime() > myCoCD.GetValue()
+		myCoCD.SetValue(Utility.GetCurrentGameTime() + cooldownCon)
+		MyREF.additem(cItem) ;Where cItem is the conjured item 
+	endIf
+EndFunction
+
+Function ProcCon()
+	actor MyREF = myUserRef.GetActorRef()
+	if Utility.RandomFloat() <= ProcChanceCO
+		myCoCD.SetValue(Utility.GetCurrentGameTime() + cooldownCon)
+		MyREF.additem(cItem) ;Where cItem is the conjured item 
+	endIf
+EndFunction
+;End Fucntion Definition Block
+
+
+
+
