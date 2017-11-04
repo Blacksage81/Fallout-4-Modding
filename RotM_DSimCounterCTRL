@@ -1,0 +1,71 @@
+Scriptname RotM_DSimCounterCTRL extends Quest
+{This Script handles the functions of the DSim series mini quests}
+
+	;Global Properties
+		GlobalVariable Property pRotM007SimChoice Auto
+		GlobalVariable Property pRotM_DS1KillCount Auto
+		GlobalVariable Property pRotM_DS4KillCount Auto
+		GlobalVariable Property pRotM_DS2ItemCount Auto
+		GlobalVariable Property pRotM_DS3ItemCount Auto
+		GlobalVariable Property pRotM_DS1ObjComp Auto Const
+		GlobalVariable Property pRotM_DS2ObjComp Auto Const
+		GlobalVariable Property pRotM_DS3ObjComp Auto Const
+		GlobalVariable Property pRotM_DS4ObjComp Auto Const
+
+	;Quest Properties
+		Quest Property pRotM007 Auto Const
+		Quest Property pRotMDSim1 Auto Const
+		Quest Property pRotMDSim2 Auto Const
+		Quest Property pRotMDSim3 Auto Const
+		Quest Property pRotMDSim4 Auto Const
+
+	;Float Properties
+		Float Property DS1TotCount Auto Const
+		Float Property DS2TotCount Auto Const
+		Float Property DS3TotCount Auto Const
+		Float Property DS4TotCount Auto Const
+
+
+	Function DSKillCounter()
+
+		float s = pRotM007SimChoice.GetValue()
+		float a = pRotM_DS1KillCount.GetValue()
+		float d = pRotM_DS4KillCount.GetValue()
+
+		If s == 1
+				if a == DS1TotCount
+					pRotM_DS1ObjComp.SetValue(1)
+					pRotMDSim1.SetStage(30)
+				endif	
+		
+		ElseIf s == 4
+				if d == DS4TotCount
+					pRotM_DS4ObjComp.SetValue(1)
+					pRotMDSim4.SetStage(70)
+				endif	
+		EndIf
+
+	EndFunction
+
+	
+	
+	Function DSItemCounter()
+
+		float s = pRotM007SimChoice.GetValue()
+		float b = pRotM_DS2ItemCount.GetValue()
+		float c = pRotM_DS3ItemCount.GetValue()
+
+		If s == 2
+				if b == DS2TotCount
+					pRotM_DS2ObjComp.SetValue(1)
+					pRotMDSim2.SetStage(70)
+				endif	
+		
+		ElseIf s == 3
+				if c == DS3TotCount
+					pRotM_DS3ObjComp.SetValue(1)
+					pRotMDSim3.SetStage(70)
+				endif	
+		EndIf
+
+	EndFunction	
