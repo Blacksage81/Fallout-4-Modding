@@ -1,0 +1,34 @@
+Scriptname RotM_CAPerkAward extends Quest
+
+	;Special Properties
+		InputEnableLayer EnableLayer
+
+	;Global Variable Properties
+		GlobalVariable Property myPerkGlobal Auto Const
+	
+	;Perk Properties
+		Perk Property myPerk Auto Const
+		
+	;Message Properties
+		Message Property myPerkMessage Auto Const
+
+Function PerkAward()
+
+		;fade game out
+            Game.FadeOutGame(abFadingOut=True, abBlackFade=False, afSecsBeforeFade=0.0, afFadeDuration=3.0, abStayFaded=True)
+
+EnableLayer = InputEnableLayer.Create()
+		EnableLayer.DisablePlayerControls(abMovement = false, abFighting = true, abCamSwitch = true, abLooking = false, abSneaking = true, \
+			abMenu = true, abActivate = false, abJournalTabs = true, abVATS = true, abFavorites = true)
+		;EnableLayer.EnableSprinting(false)
+				;Sets the Perk Line global and adds the Perk to the player
+					myPerkGlobal.SetValue(1)
+					Game.getPlayer().AddPerk(myPerk)
+					
+		;start fading game in
+			Game.FadeOutGame(abFadingOut=False, abBlackFade=False, afSecsBeforeFade=0.0, afFadeDuration=3.0, abStayFaded=False)
+	
+		; enable player controls completely
+	EnableLayer.Delete()
+		myPerkMessage.Show()
+EndFunction
