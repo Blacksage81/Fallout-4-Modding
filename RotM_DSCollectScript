@@ -1,0 +1,52 @@
+Scriptname RotM_DSCollectScript extends ObjectReference 
+{This script adds a misc object, grants xp, mods a global, and possibly disbales the activator}
+	
+	;MiscObject Properties
+		MiscObject Property pRotM_NerveTrifold Auto Const
+		MiscObject Property pRotM_DSPropEncryptedLog Auto Const
+
+	;Global Properties
+		GlobalVariable Property pRotM_SimPointVal Auto Const
+		GlobalVariable Property pRotM007SimChoice Auto
+		GlobalVariable Property pRotM_DS2ItemCount Auto
+		GlobalVariable Property pRotM_DS3ItemCount Auto
+
+	;Quest Properties
+		Quest Property pRotMDSim2 Auto Const	
+		Quest Property pRotMDSim3 Auto Const
+	;Quest Script Properties	
+		RotM_DSimCounterCTRL Property RotM007 Auto const
+		
+	;Numerical Properties
+		Int Property PointVal Auto Const
+		{300 for DS2 500 for DS3}
+		Int Property XPVal Auto Const
+		{200 for DS2 500 for DS3}
+		Int Property myStage Auto Const
+		{Stages: 20 30 40 50 60 }
+	
+
+
+Event OnActivate(ObjectReference akActionRef)
+   float mySim = pRotM007SimChoice.GetValue()
+   actor player = Game.GetPlayer()
+   if akActionRef == Game.GetPlayer()   
+		
+		
+		If mySim == 2 && pRotMDSim2.getStage() != myStage
+			player.additem(pRotM_DSPropEncryptedLog,1)
+			pRotM_DS2ItemCount.Mod(1)
+			pRotMDSim2.SetStage(myStage)
+			pRotM_SimPointVal.Mod(PointVal)
+			Game.RewardPlayerXP(XPVal)
+
+		Elseif mySim == 3 && pRotMDSim3.getStage() != myStage
+			player.additem(pRotM_NerveTrifold,1)
+			pRotM_DS3ItemCount.Mod(1)
+			pRotMDSim3.SetStage(myStage)
+			pRotM_SimPointVal.Mod(PointVal)
+			Game.RewardPlayerXP(XPVal)
+			Self.DisableNoWait()
+		EndIf
+   endif
+EndEvent
