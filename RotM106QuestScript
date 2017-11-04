@@ -1,0 +1,273 @@
+Scriptname RotM106QuestScript extends Quest
+{This is the Quest script for RotM106: Repairing the Axon Line}
+
+
+
+;-------Definition Block--------
+;Numerical Values
+;Actors
+;RefAlias
+	ReferenceAlias Property pASynth1 Auto Const
+	ReferenceAlias Property pASynth2 Auto Const
+	ReferenceAlias Property pASynth3 Auto Const
+	ReferenceAlias Property pASynth4 Auto Const
+	ReferenceAlias Property Seyhak Auto Const
+	ReferenceAlias Property Frost Auto Const
+	ReferenceAlias Property Aquarius Auto Const
+	ReferenceAlias Property pShadow1 Auto Const
+	ReferenceAlias Property pShadow2 Auto Const
+	ReferenceAlias Property pShadow3 Auto Const
+	ReferenceAlias Property pShadow4 Auto Const
+	ReferenceAlias Property pShadow5 Auto Const
+;Actor Values
+;Cell 
+;Message
+	Message Property p106Mess1 Auto Const
+	Message Property p106Mess2 Auto Const
+	Message Property p106Mess3 Auto Const
+	Message Property NCDLS Auto Const
+	Message Property p106_S50Mess Auto Const
+	
+;Object
+	ObjectReference Property Xmark1 Auto Const
+	ObjectReference Property XMark2 Auto Const
+	ObjectReference Property XMark3 Auto Const
+	ObjectReference Property AquaMark Auto Const
+	ObjectReference Property pASynthMark1 Auto Const
+	ObjectReference Property pASynthMark2 Auto Const
+	ObjectReference Property pASynthMark3 Auto Const
+	ObjectReference Property pASynthMark4 Auto Const
+	ObjectReference Property SMark1 Auto Const
+	ObjectReference Property SMark2 Auto Const
+	ObjectReference Property SMark3 Auto Const
+	ObjectReference Property SMark4 Auto Const
+	ObjectReference Property SMark5 Auto Const
+	ObjectReference Property AxonCP Auto Const
+	ObjectReference Property LWaitMark Auto Const
+	ObjectReference Property MaWaitMark Auto Const
+
+;Package
+	Package Property LTeamMatePack Auto Const
+	Package Property LHoldPackb Auto Const
+	Package Property LHoldPacka Auto Const
+	Package Property LTravelPack Auto Const
+	Package Property LEatPack Auto Const
+	Package Property MaHoldPack Auto Const
+;Quest
+	Quest Property Launcher Auto Const
+;Scene
+	Scene Property pRotM106_Stage30 Auto Const
+	Scene Property pRotM106_Stage32 Auto Const
+	Scene Property pRotM106_Stage60 Auto Const
+	Scene Property pRotM106_Stage70 Auto Const
+	
+;Special
+	Explosion Property Smoke Auto Const
+	Explosion Property TeleXP Auto Const
+	Explosion Property Xplo Auto Const
+	GlobalVariable Property pRotM_mesSel Auto
+	
+	
+;End Properties block
+	
+;Function Definitions
+
+	Function MessControl()
+		actor player = Game.GetPlayer()					
+			int ButtonPressed = p106Mess1.Show()	
+				if (pRotM_mesSel.GetValue() == 1) ; 1 Meet at Nerve Ending
+					;First Reply
+						SetStage(2)
+				
+				ElseIf (pRotM_mesSel.GetValue() == 2) ; 2 Meet at safehouse
+					;Second Reply
+						SetStage(3)
+				
+		EndIf
+
+	EndFunction
+
+	Function Shadows()
+		Actor Shadow1 = pShadow1.getActorRef()
+		Actor Shadow2 = pShadow2.getActorRef()
+		Actor Shadow3 = pShadow3.getActorRef()
+		Actor Shadow4 = pShadow4.getActorRef()
+		Actor Shadow5 = pShadow5.getActorRef()
+
+		SMark1.placeatme(Smoke)
+		Shadow1.EnableNoWait()
+		Utility.Wait(0.4)
+		SMark2.placeatme(Smoke)
+		Shadow2.EnableNoWait()
+		Utility.Wait(0.4)
+		SMark3.placeatme(Smoke)
+		Shadow3.EnableNoWait()
+		Utility.Wait(0.4)
+		SMark4.placeatme(Smoke)
+		Shadow4.EnableNoWait()
+		Utility.Wait(0.4)
+		SMark5.placeatme(Smoke)
+		Shadow5.EnableNoWait()	
+	
+	EndFunction
+		
+	Function B2Ambush()
+		Actor AS1REF = Aquarius.getActorRef()
+		Actor AS2REF = pASynth1.getActorRef()
+		Actor AS3REF = pASynth2.getActorRef()
+		Actor AS4REF = pASynth3.getActorRef()
+		Actor AS5REF = pASynth4.getActorRef()
+
+		AquaMark.placeatme(TeleXP)
+		AS1Ref.EnableNoWait()
+		Utility.Wait(0.4)
+		pASynthMark1.placeatme(TeleXP)
+		AS2Ref.EnableNoWait()
+		Utility.Wait(0.4)
+		pASynthMark2.placeatme(TeleXP)
+		AS3Ref.EnableNoWait()
+		Utility.Wait(0.4)
+		pASynthMark3.placeatme(TeleXP)
+		AS4Ref.EnableNoWait()
+		Utility.Wait(0.4)
+		pASynthMark4.placeatme(TeleXP)
+		AS5Ref.EnableNoWait()
+		Utility.Wait(0.4)
+	EndFunction
+
+	Function BrokenBush()
+		XMark1.placeatme(Xplo)
+		Utility.Wait(2)
+		XMark2.placeatme(Xplo)
+		Utility.Wait(2)
+		XMark3.placeatme(Xplo)
+		Utility.Wait(2)
+	EndFunction
+
+;------- End Definition Block--------
+
+
+Event OnStageSet(int auiStageID, int auiItemID)
+if auiStageID == 0
+;Enable/Disable phase, set during a dialog scene, propmted by completion of a Timer within Launcher
+	p106Mess1.Show()
+	Actor MRef = Frost.GetActorRef()
+	Actor LRef = Seyhak.GetActorRef()
+		MRef.MoveTo(MaWaitMark) ;Moves Malachi to the Axon CTRL Panel
+		MRef.EvaluatePackage(MaHoldPack)
+		LRef.MoveTo(MaWaitMark) ;Moves Leon to the Axon CTRL Panel
+		LRef.EvaluatePackage(LHoldPacka)
+EndIf
+	
+if auiStageID == 2
+;Talk to Leon at Nerve Ending 1 (also a Quest OBJ)
+	NCDLS.Show()
+	Utility.Wait(15)
+	p106Mess2.Show()
+	SetObjectiveDisplayed(2)
+EndIf
+
+if auiStageID == 3
+;Talk to Leon at The Safehouse (also a Quest OBJ)
+;This Stage Moves Leon to the Warehouse, then sets stage 20
+		Actor LRef = Seyhak.GetActorRef()
+		NCDLS.Show()
+		Utility.Wait(15)
+		p106Mess3.Show()
+		LRef.MoveTo(LWaitMark) ;Moves Leon to the Warehouse
+		LRef.EvaluatePackage(LHoldPackb)
+		SetObjectiveDisplayed(3)
+		SetStage(20)
+EndIf
+
+
+if auiStageID == 10
+	;Travel to the Safe house with Leon
+	SetObjectiveDisplayed(10)
+
+EndIf
+
+if auiStageID == 20
+;Head to the safe house (also a Quest OBJ)
+;Enables new FX objects.
+
+EndIf
+
+
+if auiStageID == 30
+;Investigate the Warehouse  (also a Quest OBJ)
+;use Activators with messages to indicate contents
+;Leon has a scene with Shadows near this point
+	;pRotM106_Stage30.Start()
+EndIf
+
+if auiStageID == 31
+;Shadows appear
+	Shadows()
+	SetStage(32)
+EndIf
+
+if auiStageID == 32
+;Shadow Scene two
+	pRotM106_Stage32.Start()
+EndIf
+
+if auiStageID == 40
+;Investigate the heat source
+;trigger box completes this stage with a message about the heavily guarded door now unreacable, you may have found special projects
+SetObjectiveCompleted(30)
+SetObjectiveDisplayed(40)
+EndIf
+
+
+if auiStageID == 50
+;Talk to Leon (also a Quest OBJ)
+;This OBJ is failed with SetObjectiveFailed(#) Where # is the OBJ number
+	SetObjectiveDisplayed(50)
+	B2Ambush()
+	SetObjectiveFailed(50)
+	SetObjectiveDisplayed(60)
+	SetStage(60)
+EndIf
+
+if auiStageID == 60
+;Neutralize the Zodiac Courser: Aquarius (also a Quest OBJ)
+	;Waits on default Alias on Death on Alias Aquarius
+	;Leon's approach is contolled by a scene, Phase 1? is an Action(Travel ai Pack)
+	;Phase 2 is his actual dialog about being late...
+		pRotM106_Stage60.Start()
+				Actor LREF = Seyhak.GetActorRef()
+				LREF.EvaluatePackage(LTeamMatePack)
+EndIf
+
+if auiStageID == 70
+;Return to Nerve Ending 1 (also a Quest OBJ)
+	SetObjectiveCompleted(60)
+	SetObjectiveDisplayed(70)
+
+EndIf
+
+if auiStageID == 80
+;Talk to Leon, Malachi is there too, this scene will set stage 90, completing the quest
+;Also this is a set up for RotM107
+
+
+EndIf
+
+if auiStageID == 90
+;Adds Leon as a Follower
+		Actor LeonREF = Seyhak.GetActorRef()
+		LeonREF.SetAvailableToBeCompanion()
+
+;Quest shut down
+Stop()
+
+EndIf
+EndEvent
+
+Event OnQuestShutdown()
+  Debug.Trace("This quest has shut down - do any cleanup we need to do")
+	;Sets 001: The Moon Men's Stage to 70 to start 107
+		Launcher.SetStage(70)
+endEvent
+ObjectReference Property LeHoldMarka Auto Const
