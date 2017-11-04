@@ -1,0 +1,48 @@
+Scriptname RotM_DSKillCtrl extends Actor Const
+{Point Values Boss 500 Hard 400 Medium 350 Easy 125}
+	;Explosion properties
+		Explosion Property pKidsLunchboxExplosion Auto Const
+
+	;Global Properties
+		GlobalVariable Property pRotM_SimPointVal Auto Const
+		GlobalVariable Property pRotM007SimChoice Auto Const
+		GlobalVariable Property pRotM_DS1KillCount Auto Const
+		GlobalVariable Property pRotM_DS4KillCount Auto Const
+	
+	;Numerical Properties
+		Int Property PointVal Auto Const
+		{Point Values Boss 500 Hard 400 Medium 350 Easy 125}
+	;LeveledItem Properties
+		LeveledItem Property pLL_Ammo_Any Auto Const
+
+	;Quest Script Properties
+		RotM_DSimCounterCTRL Property RotM007 Auto const
+
+	Function Death()
+		self.Dismember( "Head1", true, true, true )
+		self.RemoveAllItems()
+		self.placeatme(pKidsLunchboxExplosion)
+		pRotM_SimPointVal.mod(PointVal)
+		game.getPlayer().additem(pLL_Ammo_Any)
+		self.DisableNoWait()
+	EndFunction
+
+	Event OnDying(Actor akKiller)
+			If pRotM007SimChoice.GetValue() == 1
+				Death()
+				pRotM_DS1KillCount.Mod(1)
+				Utility.Wait(0.2)
+				RotM007.DSKillCounter()
+			Elseif pRotM007SimChoice.GetValue() == 2
+				Death()
+			
+			Elseif pRotM007SimChoice.GetValue() == 3
+				Death()
+				
+			Elseif pRotM007SimChoice.GetValue() == 4
+				Death()
+				pRotM_DS4KillCount.Mod(1)
+				Utility.Wait(0.2)
+				RotM007.DSKillCounter()
+			EndIf					
+	EndEvent
