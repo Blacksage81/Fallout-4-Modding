@@ -1,0 +1,473 @@
+Scriptname RotM105QuestScript extends Quest
+
+;Properties
+
+;Cell Properties
+	Cell Property pRoTmOutpost01 Auto Const
+
+;Actors
+ReferenceAlias Property NRC1 Auto Const ;Falcon Captive
+ReferenceAlias Property NRC2 Auto Const ;Lynx Captive
+ReferenceAlias Property NRC3 Auto Const ;Leopard Captive
+ReferenceAlias Property NRC4 Auto Const ;Ocelot Captive
+ReferenceAlias Property NRC5 Auto Const ;Serval Captive
+ReferenceAlias Property NRC6 Auto Const ;Husky Free
+ReferenceAlias Property NRC7 Auto Const ;Wolf Free
+ReferenceAlias Property NRC8 Auto Const ;Canary Free
+ReferenceAlias Property Missy Auto Const
+ReferenceAlias Property Leon Auto Const
+ReferenceAlias Property Malachi Auto Const
+ReferenceAlias Property Rezzox Auto Const
+ReferenceAlias Property pSagittarius Auto Const
+ReferenceAlias Property pSSynth1 Auto Const
+ReferenceAlias Property pSSynth2 Auto Const
+ReferenceAlias Property pSSynth4 Auto Const
+ReferenceAlias Property pSSynth5 Auto Const
+ReferenceAlias Property pSSynth3 Auto Const
+Actor Property Ep1Vendor Auto Const
+
+
+;Objects
+ObjectReference Property MBRCEnt Auto Const
+ObjectReference Property pFalconMark Auto Const
+ObjectReference Property pLynxMark Auto Const
+ObjectReference Property pOcelotMark Auto Const
+ObjectReference Property pServalMark Auto Const
+ObjectReference Property pLeopardMark Auto Const
+ObjectReference Property pMissyMark2 Auto Const
+ObjectReference Property MissyX1 Auto Const
+ObjectReference Property M105tp1 Auto Const
+ObjectReference Property L105TP1 Auto Const
+ObjectReference Property PlaceholderFlag Auto Const
+ObjectReference Property SagiMark Auto Const
+ObjectReference Property pSSynthMark1 Auto Const
+ObjectReference Property pSSynthMark2 Auto Const
+ObjectReference Property pSSynthMark3 Auto Const
+ObjectReference Property pSSynthMark4 Auto Const
+ObjectReference Property pSSynthMark5 Auto Const
+ObjectReference Property RotM105_LeonTP3 Auto Const
+ObjectReference Property RotM105_MalaTP3 Auto Const
+
+;Special
+Explosion Property Smoke Auto Const
+Explosion Property TeleXP Auto Const
+Message Property pRotM_FinalMissionWarning Auto Const
+Message Property pRotM_TB_DestUnlock2 Auto Const
+
+
+;Quest
+Quest Property Launcher Auto Const
+
+;Faction
+Faction Property pSuperMutantFaction Auto Const
+Faction Property pRotMNerveFaction Auto Const
+Faction Property pCaptiveFaction Auto Const
+
+;Scene
+Scene Property p105DS1 Auto Const
+Scene Property p105DS2 Auto Const
+Scene Property p105DS3 Auto Const
+Scene Property PostSagi Auto Const
+Scene Property pRotM_Stage50 Auto Const
+
+;Package Leon
+Package Property Leon105TP Auto Const
+Package Property LeonBloodRun1a Auto Const
+Package Property LeonBloodRun1b Auto Const
+Package Property LeonBloodRun2 Auto Const
+Package Property LeonBloodEscort Auto Const
+Package Property LAmbushRPack Auto Const
+Package Property LHoldPack Auto Const
+Package Property LReturnPack Auto Const
+
+;Package Malachi
+Package Property MHoldPack Auto Const
+Package Property MReturnPack Auto Const
+Package Property MAmbushRPack Auto Const
+Package Property Mala105TP Auto Const
+Package Property MalaBloodRun1a Auto Const
+Package Property MalaBloodRun1b Auto Const
+Package Property MalaBloodRun2 Auto Const
+Package Property MalaBloodEscort Auto Const
+
+
+;Package Missy
+Package Property MiHoldPack Auto Const
+Package Property MiHoldPack2 Auto Const
+
+
+;General Packages
+Package Property RotMPrisoner Auto Const
+Package Property PlaceHolder Auto Const
+Package Property RotMBlexit Auto Const
+
+
+;Function Definitions
+
+Function MyEnter()
+	actor MREF = Missy.getActorRef()
+	MBRCEnt.PlaceatMe(Smoke)
+	MREF.MoveTo(MBRCEnt)
+EndFunction
+
+Function MyEnter2()
+	actor MREF = Missy.getActorRef()
+	MREF.Enable()
+	MissyX1.PlaceatMe(Smoke)
+	MREF.MoveTo(MissyX1)
+EndFunction
+	
+Function MyVanish()
+	actor MREF = Missy.getActorRef()
+	MBRCEnt.PlaceatMe(Smoke)
+	MREF.MoveTo(pMissyMark2)
+	MREF.Disable()
+EndFunction
+	
+Function AOEVanish()
+;Local Function properties
+		actor captive1 = NRC1.getActorRef()
+		actor captive2 = NRC2.getActorRef()
+		actor captive3 = NRC3.getActorRef()
+		actor captive4 = NRC4.getActorRef()
+		actor captive5 = NRC5.getActorRef()
+		actor MREF = Missy.getActorRef()
+	;Props End
+	
+	MissyX1.PlaceatMe(Smoke)
+	MREF.MoveTo(pMissyMark2)
+	MREF.EvaluatePackage(MiHoldPack2)
+	
+	captive1.MoveTo(PlaceholderFlag)
+	captive2.MoveTo(PlaceholderFlag)
+	captive3.MoveTo(PlaceholderFlag)
+	captive4.MoveTo(PlaceholderFlag)
+	captive5.MoveTo(PlaceholderFlag)
+EndFunction
+
+Function Trio()
+	;Local Function properties
+		actor recruit1 = NRC6.getActorRef()
+		actor recruit2 = NRC7.getActorRef()
+		actor recruit3 = NRC8.getActorRef()
+	;Props End
+	
+	recruit1.MoveTo(PlaceholderFlag)
+	recruit2.MoveTo(PlaceholderFlag)
+	recruit3.MoveTo(PlaceholderFlag)
+EndFunction
+
+Function Prisoner()
+;Local Function properties
+		actor captive1 = NRC1.getActorRef()
+		actor captive2 = NRC2.getActorRef()
+		actor captive3 = NRC3.getActorRef()
+		actor captive4 = NRC4.getActorRef()
+		actor captive5 = NRC5.getActorRef()
+	;Props End
+;Moves the captives to the Jail cells
+	captive1.MoveTo(pFalconMark)
+	captive2.MoveTo(pLynxMark)
+	captive3.MoveTo(pLeopardMark)
+	captive4.MoveTo(pOcelotMark)
+	captive5.MoveTo(pServalMark)
+
+;The prisoners will evaluate a wait package
+	captive1.EvaluatePackage(RotMPrisoner)
+	captive2.EvaluatePackage(RotMPrisoner)
+	captive3.EvaluatePackage(RotMPrisoner)
+	captive4.EvaluatePackage(RotMPrisoner)
+	captive5.EvaluatePackage(RotMPrisoner)
+
+EndFunction
+
+Function Blexit()
+;function that will run after PC frees the captives
+	;Local Function properties
+		actor captive1 = NRC1.getActorRef()
+		actor captive2 = NRC2.getActorRef()
+		actor captive3 = NRC3.getActorRef()
+		actor captive4 = NRC4.getActorRef()
+		actor captive5 = NRC5.getActorRef()
+	;Props End
+
+
+;After the PC frees the Captives, they will then evaluate the Blexit Package
+	captive1.EvaluatePackage(RotMBlexit)
+	captive2.EvaluatePackage(RotMBlexit)
+	captive3.EvaluatePackage(RotMBlexit)
+	captive4.EvaluatePackage(RotMBlexit)
+	captive5.EvaluatePackage(RotMBlexit)
+EndFunction
+
+Function GuardVanish()
+		Actor LeonREF = Leon.GetActorRef()
+		Actor MalaREF = Malachi.GetActorRef()
+		LeonREF.PlaceatMe(Smoke)
+		MalaREF.PlaceatMe(Smoke)
+		LeonREF.MoveTo(RotM105_LeonTP3)	
+		MalaREF.MoveTo(RotM105_MalaTP3)	
+EndFunction
+
+Function Chillax()
+;function that will run after PC frees the captives
+	;Local Function properties
+		actor captive1 = NRC1.getActorRef()
+		actor captive2 = NRC2.getActorRef()
+		actor captive3 = NRC3.getActorRef()
+		actor captive4 = NRC4.getActorRef()
+		actor captive5 = NRC5.getActorRef()
+		actor recruit1 = NRC6.getActorRef()
+		actor recruit2 = NRC7.getActorRef()
+		actor recruit3 = NRC8.getActorRef()
+	;Props End
+
+
+;After the PC frees the Captives, they will then evaluate the Blexit Package
+	captive1.EvaluatePackage(PlaceHolder)
+	captive2.EvaluatePackage(PlaceHolder)
+	captive3.EvaluatePackage(PlaceHolder)
+	captive4.EvaluatePackage(PlaceHolder)
+	captive5.EvaluatePackage(PlaceHolder)
+	recruit1.EvaluatePackage(PlaceHolder)
+	recruit2.EvaluatePackage(PlaceHolder)
+	recruit3.EvaluatePackage(PlaceHolder)
+EndFunction
+
+Function Ambush()
+
+	Actor SS1REF = pSagittarius.getActorRef()
+	Actor SS2REF = pSSynth1.getActorRef()
+	Actor SS3REF = pSSynth2.getActorRef()
+	Actor SS4REF = pSSynth3.getActorRef()
+	Actor SS5REF = pSSynth4.getActorRef()
+	Actor SS6REF = pSSynth5.getActorRef()
+	
+		SagiMark.placeatme(TeleXP)
+		SS1Ref.EnableNoWait()
+		Utility.Wait(0.4)
+		pSSynthMark1.placeatme(TeleXP)
+		SS2Ref.EnableNoWait()
+		Utility.Wait(0.4)
+		pSSynthMark2.placeatme(TeleXP)
+		SS3Ref.EnableNoWait()
+		Utility.Wait(0.4)
+		pSSynthMark3.placeatme(TeleXP)
+		SS4Ref.EnableNoWait()
+		Utility.Wait(0.4)
+		pSSynthMark4.placeatme(TeleXP)
+		SS5Ref.EnableNoWait()
+		Utility.Wait(0.4)
+		pSSynthMark5.placeatme(TeleXP)
+		SS6Ref.EnableNoWait()
+EndFunction
+
+Event OnStageSet(int auiStageID, int auiItemID)
+	if auiStageID == 0
+		;Start Quest
+		;Disables Rezzox and Placing Captives
+		Rezzox.getActorRef().Disable()
+		Trio()
+		Prisoner()
+		MyEnter()
+		Actor LeonREF = Leon.GetActorRef()
+		Actor MalaREF = Malachi.GetActorRef()
+		actor MREF = Missy.getActorRef()
+		LeonRef.MoveToPackageLocation()
+		LeonREF.EvaluatePackage(LHoldPack)		
+		MalaREF.EvaluatePackage(MHoldPack)
+		MREF.EvaluatePackage(MiHoldPack)		
+		SetStage(10)
+	EndIf	
+	
+	if auiStageID == 10
+		pRotM_FinalMissionWarning.Show()
+		SetObjectiveDisplayed(10)
+		;Completed by p105DS1
+		;p105DS1 will also Set Stage 20 upon completion
+	EndIf
+	
+	if auiStageID == 20
+		MyVanish()
+		SetObjectiveCompleted(10)
+		SetObjectiveDisplayed(20)
+		Actor LeonREF = Leon.GetActorRef()
+		Actor MalaREF = Malachi.GetActorRef()
+		;Trigger will Set Stage 25 
+		MalaREF.EvaluatePackage(MalaBloodRun1a)
+		LeonREF.EvaluatePackage(LeonBloodRun1a)
+	EndIf
+	
+	if auiStageID == 21
+		SetObjectiveCompleted(20)
+		SetObjectiveDisplayed(25)
+		SetStage(25)
+	EndIf
+	
+	if auiStageID == 25
+		;Waits for the Player to kill MuckMouth
+
+	EndIf
+	
+	if auiStageID == 26
+		;This stage is Set by DefaultAliasonDeath on MuckMouth
+		SetObjectiveCompleted(25)
+		SetObjectiveDisplayed(26)
+		Actor LeonREF = Leon.GetActorRef()
+		Actor MalaREF = Malachi.GetActorRef()
+		;Trigger will Set Stage 25 
+		MalaREF.EvaluatePackage(MalaBloodRun1b)
+		LeonREF.EvaluatePackage(LeonBloodRun1b)
+	EndIf
+	
+		if auiStageID == 29
+		;This stage is Set by Trigger box at the Rally point
+		SetObjectiveCompleted(26)
+		SetStage(30)
+	EndIf
+	
+	if auiStageID == 30
+		;Points to Slagg
+		;This Stage is completed by DefaultAliasonDeath on Slagg
+		SetObjectiveDisplayed(30)
+		Actor LeonREF = Leon.GetActorRef()
+		Actor MalaREF = Malachi.GetActorRef()
+		MalaREF.EvaluatePackage()
+		LeonREF.EvaluatePackage()
+		MalaREF.EvaluatePackage(MalaBloodEscort)
+		LeonREF.EvaluatePackage(LeonBloodEscort)
+	EndIf
+	
+	if auiStageID == 31
+		SetObjectiveCompleted(30)
+		;Will point to Stairs of destiny
+			SetObjectiveDisplayed(40)
+
+	EndIf
+	
+	if auiStageID == 40
+		;This stage is set by the trigger around at the bottom of the stairs of destiny
+		SetObjectiveCompleted(40)
+		SetObjectiveDisplayed(50)
+
+		
+	EndIf
+	
+	if auiStageID == 50
+		;Waits on Trigger around the Building
+			;new scene plays here
+				pRotM_Stage50.Start()
+	EndIf
+	
+
+	if auiStageID == 55
+		SetObjectiveCompleted(52)
+		MyEnter2()
+		Blexit()
+		SetObjectiveDisplayed(53)
+	EndIf
+	
+	
+	if auiStageID == 58
+		;Waits on p105DS2, which will complete this stage, and set Stage 59
+		SetStage(59)
+	EndIf
+	
+	if auiStageID == 59
+		;Stops the Post Rescue Scene and moves the Actors to the Nerve Ending
+		p105DS2.Stop()
+		;Enables Rezzox and Moves recruits to Nerve Ending
+			AOEVanish()
+			Rezzox.getActorRef().EnableNoWait()
+		;Readies Leon and Malachi to Encounter Rezzox
+				Actor LeonREF = Leon.GetActorRef()
+				Actor MalaREF = Malachi.GetActorRef()
+					LeonREF.EvaluatePackage(LReturnPack)		
+					MalaREF.EvaluatePackage(MReturnPack)
+		Setstage(60)
+	EndIf
+	
+	if auiStageID == 60
+		;Kill Rezzox
+			SetObjectiveDisplayed(60)
+	EndIf
+	
+	if auiStageID == 61
+		;Rezzon Down!
+		SetObjectiveCompleted(60)
+		SetObjectiveDisplayed(65)
+		;Readies Leon and Malachi to Encounter Sagittarius
+				Actor LeonREF = Leon.GetActorRef()
+				Actor MalaREF = Malachi.GetActorRef()
+					LeonREF.EvaluatePackage(LAmbushRPack)		
+					MalaREF.EvaluatePackage(MAmbushRPack)
+		
+	EndIf
+	
+	if auiStageID == 65
+		;To Break an Ambush
+		Ambush()
+	EndIf
+
+	if auiStageID == 68
+		;Sagi is dead, and the scene should start now.
+		SetObjectiveCompleted(65)
+		PostSagi.Start()
+	EndIf
+	
+	if auiStageID == 69
+		
+	
+		SetStage(70)
+	EndIf
+	
+	if auiStageID == 70
+		;SetStage trigger at the Nerve Ending will complete this stage.
+		SetObjectiveDisplayed(70)
+		Chillax()
+		SetStage(71)
+	EndIf
+
+if auiStageID == 71
+		;Background stage that plays the ambush dialog
+		;which contains the "trigger" for Leon and Malachi to vanish
+		GuardVanish()
+		SetStage(80)
+	EndIf
+
+	if auiStageID == 80
+		;Final Dialog scene will complete this stage and set stage 90, thus ending the quest
+		;Puts Missy into position
+			Actor MissyREF = Missy.GetActorRef()
+			Actor LeonREF = Leon.GetActorRef()
+			Actor MalaREF = Malachi.GetActorRef()
+		;Failsafe to Ensure Malachi and Leon are in Position
+			if LeonREF.GetParentCell() != pRoTmOutpost01 && MalaREF.GetParentCell() != pRoTmOutpost01
+					LeonREF.MoveTo(RotM105_LeonTP3)	
+					MalaREF.MoveTo(RotM105_MalaTP3)
+			endif
+			
+				LeonREF.EvaluatePackage(Leon105TP)
+				MalaREF.EvaluatePackage(Mala105TP)
+
+	EndIf
+
+	if auiStageID == 90
+		;Set by the third and Final Dialog scene
+		;Adds Missy as a Follower
+		Actor MissyRef = Missy.GetActorRef()
+		MissyREF.SetAvailableToBeCompanion()
+		Ep1Vendor.Enable()
+		;Quest shut down
+		Stop()
+	EndIf
+
+EndEvent
+
+
+Event OnQuestShutdown()
+  Debug.Trace("This quest has shut down - do any cleanup we need to do")
+		pRotM_TB_DestUnlock2.Show()
+	;Sets 001: The Moon Men's Stage to 60 to Finish the Moon Men
+		Launcher.SetStage(60)
+endEvent
