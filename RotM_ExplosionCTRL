@@ -1,0 +1,7 @@
+Scriptname RotM_ExplosionCTRL extends activemagiceffect Const
+
+Explosion Property myExplo Auto Const
+
+Event OnEffectStart(Actor akTarget, Actor akCaster)
+    akCaster.PlaceAtMe(myExplo)
+EndEvent
