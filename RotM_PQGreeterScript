@@ -1,0 +1,58 @@
+Scriptname RotM_PQGreeterScript extends Terminal
+
+;-------Definition Block--------
+;Numerical Values
+;Actors
+;Actor Values
+;Cell 
+;Global Properties
+;Faction
+;Object
+;Package
+;Quest
+Quest Property pRotM001 Auto Const
+;ReferenceAlias Properties
+;Scene
+;Special
+GlobalVariable Property pRotM_EpisodeNum Auto
+
+;Function Definitions
+
+
+
+
+
+;End Function Block--------
+;End Definition Block--------
+
+Event OnMenuItemRun(int ID, ObjectReference akTerminalRef)
+
+
+If ID == 1 ; Does a thing when the Player chooses an option.
+		;The thing that is done.
+	EndIf
+If ID == 2 ; Does a thing when the Player chooses an option.
+		;The thing that is done.
+	EndIf
+If ID == 3 ; Does a thing when the Player chooses an option.
+		;The thing that is done.
+	EndIf
+If ID == 4 ; Does a thing when the Player chooses an option.
+		;The thing that is done.
+	EndIf
+If ID == 5 ; Does a thing when the Player chooses an option.
+		;The thing that is done.
+	EndIf	
+If ID == 6 ; Does a thing when the Player chooses an option.
+		;The thing that is done.
+			pRotM001.SetStage(10)
+			pRotM_EpisodeNum.Mod(1)
+	EndIf
+If ID == 7 ; Does a thing when the Player chooses an option.
+		;The thing that is done.
+	EndIf
+If ID == 8 ; Does a thing when the Player chooses an option.
+		;The thing that is done.
+	EndIf
+
+EndEvent
