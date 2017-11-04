@@ -1,0 +1,9 @@
+Scriptname RotM_saFinishControler extends activemagiceffect Const
+{This Script controls the Finishing attacks of Buff type Spells}
+Spell Property mySpell Auto Const
+Actor Property myActor Auto Const
+
+Event OnEffectFinish(Actor akTarget, Actor akCaster)
+	akTarget = myActor
+   myspell.cast(myActor, akTarget = None)
+EndEvent
