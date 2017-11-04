@@ -1,0 +1,66 @@
+Scriptname RotM_DSimISChem1Script extends Terminal 
+
+;-------Definition Block--------
+	;Numerical Values
+		Float Property PRValue Auto Const
+		{175 points}
+		Float Property CRValue Auto Const
+		{175 points}
+		Float Property PEValue Auto Const
+		{175 points}
+		Float Property GOValue Auto Const
+		{175 points}
+	;Global Properties
+		GlobalVariable Property pRotM_SimPointVal Auto
+	;Potion Properties
+		Potion Property pRotM_primalrage Auto Const
+		Potion Property pRotM_creeperlite Auto Const
+		Potion Property pRotM_peepingtom Auto Const
+		Potion Property pRotM_goincommando Auto Const
+	;Quest Properties
+		Quest Property pRotM000 Auto Const
+;Function Definitions
+
+
+
+
+
+;End Function Block--------
+;End Definition Block--------
+
+Event OnMenuItemRun(int ID, ObjectReference akTerminalRef)
+
+
+If ID == 1 ; Does a thing when the Player chooses an option.
+		if pRotM_SimPointVal.GetValue() >= PEValue
+			pRotM_SimPointVal.Mod(PEValue * -1)
+				Game.GetPlayer().AddItem(pRotM_peepingtom)
+				pRotM000.UpdateCurrentInstanceGlobal(pRotM_SimPointVal)
+				Utility.Wait(1)
+		EndIf
+	EndIf
+If ID == 2 ; Does a thing when the Player chooses an option.
+		if pRotM_SimPointVal.GetValue() >= GOValue
+			pRotM_SimPointVal.Mod(GOValue * -1)
+				Game.GetPlayer().AddItem(pRotM_goincommando)
+				pRotM000.UpdateCurrentInstanceGlobal(pRotM_SimPointVal)
+				Utility.Wait(1)
+		EndIf
+	EndIf
+If ID == 3 ; Does a thing when the Player chooses an option.
+		if pRotM_SimPointVal.GetValue() >= PRValue
+			pRotM_SimPointVal.Mod(PRValue * -1)
+				Game.GetPlayer().AddItem(pRotM_primalrage)
+				pRotM000.UpdateCurrentInstanceGlobal(pRotM_SimPointVal)
+				Utility.Wait(1)
+		EndIf
+	EndIf
+If ID == 4 ; Does a thing when the Player chooses an option.
+		if pRotM_SimPointVal.GetValue() >= CRValue
+			pRotM_SimPointVal.Mod(CRValue * -1)
+				Game.GetPlayer().AddItem(pRotM_creeperlite)
+				pRotM000.UpdateCurrentInstanceGlobal(pRotM_SimPointVal)
+				Utility.Wait(1)
+		EndIf
+	EndIf
+EndEvent
