@@ -1,0 +1,16 @@
+Scriptname RotM_AddCreditsScript extends activemagiceffect
+
+Float Property CreditsToAdd Auto Const
+Message Property CredGain Auto Const
+GlobalVariable Property pRotM_CreditsBalVal Auto
+Quest Property pRotM000 Auto Const ;
+
+Event OnEffectStart(Actor akTarget, Actor akCaster)
+    		
+		float c = CreditsToAdd
+			pRotM_CreditsBalVal.Mod(c)
+      pRotM000.UpdateCurrentInstanceGlobal(pRotM_CreditsBalVal)
+				CredGain.Show(afArg1 = c)
+
+
+EndEvent
